@@ -15,3 +15,5 @@ Examples
   >>> virksomhed = Virksomhed(data)
   >>> virksomhed.antal_ansatte
   0
+  >>> cvr_file = CvrFile(filename)
+  >>> cvr_file.write_virksomhed_feature_file()   # and wait
