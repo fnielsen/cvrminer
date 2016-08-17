@@ -57,18 +57,56 @@ class CvrFile(object):
     def __init__(self, filename=JSONL_FILENAME):
         self.filename = filename
         self.fid = open(filename)
+        self.line_number = 0
 
     def __iter__(self):
         return self
 
     def __next__(self):
+        """Return data from line in JSONL file.
+
+        Returns
+        -------
+        obj : dict
+            JSON decoded data object from line in file
+
+        """
         line = self.fid.readline()
-        data = json.loads(line)
+        self.line_number += 1
+        try:
+            data = json.loads(line)
+        except ValueError:
+            raise ValueError(
+                "No JSON object could be decoded in line {}: {}".format(
+                    self.line_number, line))
         return data
         
     next = __next__
-            
-    def write_virksomhed_feature_file(self, filename='virksomheder-features.csv'):
+
+    def __str__(self):
+        """Return human readable representation of object."""
+        return "<CvrFile(filename={})>".format(self.filename)
+
+    __repr__ = __str__
+
+    def iter_virksomhed_features(self):
+        """Yield features for virksomheder.
+
+        Yields
+        ------
+        features : OrderedDict
+            Features in an ordered dictionary
+
+        """
+        for n, obj in enumerate(self):
+            if 'Vrvirksomhed' not in obj['_source']:
+                    continue
+            virksomhed = Virksomhed(obj)
+            features = virksomhed.features()
+            yield features
+    
+    def write_virksomhed_features_file(
+            self, filename='virksomheder-features.csv'):
         """Write feature file for virksomheder in the fille.
 
         Parameters
@@ -80,11 +118,7 @@ class CvrFile(object):
         with open(filename, 'w') as csvfile:
             csv_writer = csv.writer(csvfile)
             header = None
-            for n, obj in enumerate(self):
-                if 'Vrvirksomhed' not in obj['_source']:
-                    continue
-                virksomhed = Virksomhed(obj)
-                features = virksomhed.features()
+            for n, features in enumerate(self.iter_virksomhed_features()):
                 if not header:
                     header = features.keys()
                     csv_writer.writerow(header)
