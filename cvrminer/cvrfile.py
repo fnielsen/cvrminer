@@ -1,6 +1,6 @@
 """CVR miner.
 
-Handles JSONL files from CVR in Erhvervsstyrelsen with information about 
+Handles JSONL files from CVR in Erhvervsstyrelsen with information about
 companies, places and participants.
 
 Command-line usage
@@ -12,12 +12,12 @@ Command-line usage
 JSON file structure
 -------------------
 _id : ID of some form
-_index : 
+_index :
 _source : Actual data
 _type: 'virksomhed', 'produktionsenhed', 'deltager' or 'meta'
 fields
 
-The 'meta' type appear only once and with the entry: 
+The 'meta' type appear only once and with the entry:
     {"_index":"cvr-permanent-prod-20151209",
      "_type":"meta",
      "_id":"1",
@@ -37,7 +37,7 @@ from pprint import pprint
 from .virksomhed import Virksomhed
 
 JSONL_FILENAME = 'cvr-permanent.json'
-# $ wc cvr-permanent.json 
+# $ wc cvr-permanent.json
 #    4721004   127333568 42796650397 cvr-permanent.json
 
 
@@ -80,7 +80,7 @@ class CvrFile(object):
                 "No JSON object could be decoded in line {}: {}".format(
                     self.line_number, line))
         return data
-        
+
     next = __next__
 
     def __str__(self):
@@ -104,7 +104,7 @@ class CvrFile(object):
             virksomhed = Virksomhed(obj)
             features = virksomhed.features()
             yield features
-    
+
     def write_virksomhed_features_file(
             self, filename='virksomheder-features.csv'):
         """Write feature file for virksomheder in the fille.
@@ -113,7 +113,7 @@ class CvrFile(object):
         ----------
         filename : str
             Filename for comma-separated output file.
-        
+
         """
         with open(filename, 'w') as csvfile:
             csv_writer = csv.writer(csvfile)
@@ -153,7 +153,7 @@ def print_types(filename=JSONL_FILENAME):
             types.add(type_)
 
 
-def print_source_fields(self):
+def print_source_fields(filename=JSONL_FILENAME):
     """Print field values from _source fields in JSON file.
 
     This could produce:
