@@ -8,7 +8,6 @@ from numpy import nan
 
 
 class Virksomhed(object):
-    
     """Encapsulate a single 'virksomhed' from CVR."""
 
     def __init__(self, data):
@@ -18,13 +17,13 @@ class Virksomhed(object):
         ----------
         data : dist
             Nested structure corresponding to JSON file from CVR dump.
-        
+
         """
         self.data = data
 
     def __str__(self):
         """Return human readable string for object.
-        
+
         Returns
         -------
         readable : str
@@ -37,7 +36,14 @@ class Virksomhed(object):
 
     @property
     def antal_penheder(self):
-        """Return number of P-enheder."""
+        """Return number of P-enheder.
+
+        Returns
+        -------
+        antal : int
+            Number of p-enheder from the 'antalPenhder field.
+
+        """
         value = self.data['_source']['Vrvirksomhed']['virksomhedMetadata'][
             'antalPenheder']
         return value
@@ -52,11 +58,13 @@ class Virksomhed(object):
         Returns
         -------
         kode : str
+            The Branch-ansvarskode as a string. If the field is None then the
+            string 'None' is returned.
 
         """
         value = self.data['_source']['Vrvirksomhed']['brancheAnsvarskode']
         return str(value)
-    
+
     @property
     def cvr_nummer(self):
         """Return CVR number."""
@@ -67,16 +75,16 @@ class Virksomhed(object):
     def nyeste_antal_ansatte(self):
         """Return 'antal ansatte'.
 
-        Taken as the first number from the 'intervalKodeAntalAnsatte' field 
+        Taken as the first number from the 'intervalKodeAntalAnsatte' field
         from the nyesteAarsbeskaeftigelse.
 
         """
-        try: 
+        try:
             value = self.data['_source']['Vrvirksomhed']['virksomhedMetadata'][
                 'nyesteAarsbeskaeftigelse']['intervalKodeAntalAnsatte']
             numbers = findall('\d+', value)
             return int(numbers[0])
-        except: 
+        except:
             return nan
 
     @property
@@ -94,11 +102,21 @@ class Virksomhed(object):
             return nan
 
     @property
-    def nyeste_virksomhedsstatus(self):
-        """Return last virksomhedsstatus."""
-        virksomhedsstatus = self.data['_source']['Vrvirksomhed'][
-            'virksomhedMetadata']['nyesteVirksomhedsstatus']['langbeskrivelse']
-        return virksomhedsstatus
+    def nyeste_statuskode(self):
+        """Return newest 'statuskode' from 'nyestestatus.
+
+        Return
+        ------
+        statuskode : int
+            Integer for 'statuskode'
+
+        """
+        try:
+            statuskode = self.data['_source']['Vrvirksomhed'][
+                'virksomhedMetadata']['nyesteStatus']['statuskode']
+            return str(statuskode)
+        except:
+            return 'None'
 
     @property
     def reklamebeskyttet(self):
@@ -112,32 +130,57 @@ class Virksomhed(object):
         value = self.data['_source']['Vrvirksomhed'][
             'virksomhedMetadata']['sammensatStatus']
         return value
-    
+
     @property
     def sidste_virksomhedsstatus(self):
-        """Return last virksomhedsstatus."""
+        """Return last virksomhedsstatus.
+
+        Returns
+        -------
+        virksomhedsstatus : string
+            Last 'virksomhedsstatus'. If the length of list of
+            'virksomhedstatus' is zero an empty string is returned.
+
+        """
         virksomhedsstatus = self.data['_source']['Vrvirksomhed'][
             'virksomhedsstatus']
         if len(virksomhedsstatus) == 0:
-            return 'NORMAL'
+            return ''
         else:
             return virksomhedsstatus[-1]['status']
 
     @property
     def stiftelsesdato(self):
+        """Return stiftelsesdato.
+
+        Returns
+        -------
+        date : str
+            Stiftelsesdato from 'virksomhedMetadata' as a string.
+
+        """
         value = self.data['_source']['Vrvirksomhed']['virksomhedMetadata'][
             'stiftelsesDato']
         return value
 
     @property
     def stiftelsesaar(self):
+        """Return year part of stiftelsesdato.
+
+        Returns
+        -------
+        year : int
+            Integer for year of stiftelsesdato. NaN is returned if the year
+            cannot be converted from the date.
+
+        """
         date = self.stiftelsesdato
         try:
             year = int(date[:4])
         except:
             year = nan
         return year
-    
+
     def features(self):
         """Return set of features for a virksomhed.
 
@@ -155,6 +198,6 @@ class Virksomhed(object):
             ('nyeste_virksomhedsform', self.nyeste_virksomhedsform),
             ('reklamebeskyttet', self.reklamebeskyttet),
             ('sammensat_status', self.sammensat_status),
-            ('sidste_virksomhedsstatus', self.sidste_virksomhedsstatus),
+            ('nyeste_statuskode', self.nyeste_statuskode),
             ('stiftelsesaar', self.stiftelsesaar),
         ])
