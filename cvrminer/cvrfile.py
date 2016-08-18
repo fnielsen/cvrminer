@@ -98,11 +98,15 @@ class CvrFile(object):
             Features in an ordered dictionary
 
         """
-        for n, obj in enumerate(self):
+        for n, obj in enumerate(self, start=1):
             if 'Vrvirksomhed' not in obj['_source']:
                     continue
             virksomhed = Virksomhed(obj)
-            features = virksomhed.features()
+            try:
+                features = virksomhed.features()
+            except Exception as err:
+                raise err("Error in line {} with {}.".format(
+                    n, virksomhed))
             yield features
 
     def write_virksomhed_features_file(
