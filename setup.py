@@ -7,6 +7,6 @@ setup(
     license='Apache License',
     url='https://github.com/fnielsen/cvrminer',
     packages=['cvrminer'],
-    test_requires=['flake8'],
-    )
+    tests_require=['flake8'],
+)
   
