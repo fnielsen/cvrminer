@@ -60,7 +60,7 @@ class CvrFile(object):
         ----------
         filename : str
             Filename for JSONL file with CVR data.
-        
+
         """
         self.filename = filename
         self.fid = open(filename)
