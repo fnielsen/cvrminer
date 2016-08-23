@@ -72,6 +72,24 @@ class Virksomhed(object):
         return value
 
     @property
+    def foerste_deltager_navn(self):
+        """Return gender of first deltager.
+
+        Returns
+        -------
+        name : str
+            If the name cannot be extracted then the an empty string is
+            returned.
+
+        """
+        try:
+            name = self.data['_source']['Vrvirksomhed']['deltagerRelation'][0][
+                'deltager']['navne'][0]['navn']
+        except (KeyError, IndexError, TypeError):
+            name = ''
+        return name
+
+    @property
     def nyeste_antal_ansatte(self):
         """Return 'antal ansatte'.
 
