@@ -42,7 +42,6 @@ JSONL_FILENAME = 'cvr-permanent.json'
 
 
 class CvrFile(object):
-
     """CVR file.
 
     Examples
@@ -55,11 +54,20 @@ class CvrFile(object):
     """
 
     def __init__(self, filename=JSONL_FILENAME):
+        """Setup file for reading.
+
+        Parameters
+        ----------
+        filename : str
+            Filename for JSONL file with CVR data.
+        
+        """
         self.filename = filename
         self.fid = open(filename)
         self.line_number = 0
 
     def __iter__(self):
+        """Return iterator."""
         return self
 
     def __next__(self):
@@ -183,6 +191,11 @@ def pretty_print(filename=JSONL_FILENAME):
 
 
 def main():
+    """Handle command-line interface.
+
+    This will pretty print the JSONL file.
+
+    """
     pretty_print()
 
 
