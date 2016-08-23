@@ -97,6 +97,21 @@ class CvrFile(object):
 
     __repr__ = __str__
 
+    def iter_virksomhed(self):
+        """Yield virksomhed.
+
+        Yields
+        ------
+        virksomhed : virksomhed.Virksomhed
+            Object representing a virksomhed
+
+        """
+        for n, obj in enumerate(self, start=1):
+            if 'Vrvirksomhed' not in obj['_source']:
+                    continue
+            virksomhed = Virksomhed(obj)
+            yield virksomhed
+
     def iter_virksomhed_features(self):
         """Yield features for virksomheder.
 
@@ -106,10 +121,7 @@ class CvrFile(object):
             Features in an ordered dictionary
 
         """
-        for n, obj in enumerate(self, start=1):
-            if 'Vrvirksomhed' not in obj['_source']:
-                    continue
-            virksomhed = Virksomhed(obj)
+        for n, virksomhed in enumerate(self.iter_virksomhed(), start=1):
             try:
                 features = virksomhed.features()
             except Exception as err:
