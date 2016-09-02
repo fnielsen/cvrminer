@@ -18,6 +18,8 @@ import sys
 
 from lxml import etree
 
+from six import print_
+
 
 def print_tag_value(filename, tag='NameOfReportingEntity'):
     """Print value for a specified tag.
@@ -39,11 +41,11 @@ def print_tag_value(filename, tag='NameOfReportingEntity'):
         Tag to print.
 
     """
-    tree = etree.fromstring(open(filename).read())
+    tree = etree.fromstring(open(filename, 'rb').read())
     elements = [element for element in tree.findall('.//')]
     for element in elements:
         if element.tag.endswith(tag):
-            print(element.text.encode('utf-8'))
+            print_(element.text)
 
 
 def print_name_and_surname_of_auditor(filename):
@@ -75,7 +77,7 @@ def main():
             print_tag_value(filename,
                             arguments['--tag'])
         except etree.XMLSyntaxError as err:
-            print(err, file=sys.stderr)
+            print_(err, file=sys.stderr)
 
 
 if __name__ == '__main__':
