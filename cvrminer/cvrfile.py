@@ -30,6 +30,8 @@ The 'meta' type appear only once and with the entry:
 
 import csv
 
+from gzip import GzipFile
+
 import json
 
 from pprint import pprint
@@ -63,7 +65,10 @@ class CvrFile(object):
 
         """
         self.filename = filename
-        self.fid = open(filename)
+        try:
+            self.fid = open(filename)
+        except IOError:
+            self.fid = GzipFile(filename + '.gz')
         self.line_number = 0
 
     def __iter__(self):
