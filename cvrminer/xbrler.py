@@ -51,6 +51,38 @@ HEADERS_FOR_JSON = {
 SEARCH_URL = "http://distribution.virk.dk/offentliggoerelser/_search"
 
 
+def extract_tag_value(filename, tag='NameOfReportingEntity'):
+    """Extract value for a specified tag.
+
+    Extract the value from a name from specified field.
+
+    Possible tags are
+    - NameOfReportingEntity
+    - NameAndSurnameOfAuditor
+    - DateOfGeneralMeeting
+    - PlaceOfSignatureOfStatement
+    - and many others
+
+    Parameters
+    ----------
+    filename : str
+        Filename of XBRL XML file.
+    tag : str or None
+        Tag to extract.
+
+    Returns
+    -------
+    value : str
+        Value of element text
+
+    """
+    tree = etree.fromstring(open(filename, 'rb').read())
+    elements = [element for element in tree.findall('.//')]
+    for element in elements:
+        if element.tag.endswith(tag):
+            return element.text
+
+
 def print_tag_value(filename, tag='NameOfReportingEntity'):
     """Print value for a specified tag.
 
@@ -71,11 +103,7 @@ def print_tag_value(filename, tag='NameOfReportingEntity'):
         Tag to print.
 
     """
-    tree = etree.fromstring(open(filename, 'rb').read())
-    elements = [element for element in tree.findall('.//')]
-    for element in elements:
-        if element.tag.endswith(tag):
-            print_(element.text)
+    print_(extract_tag_value(filename, tag=tag))
 
 
 def print_name_and_surname_of_auditor(filename):
