@@ -16,3 +16,9 @@ def smiley():
     """Return smiley page of for app."""
     table = app.smiley.db.tables.smiley.head(n=10000).to_html()
     return render_template('smiley.html', table=table)
+
+
+@app.route("/cvr/<int:cvr>")
+def show_cvr(cvr):
+    """Return smiley page of for app."""
+    return render_template('cvr.html', cvr=cvr)
