@@ -17,9 +17,8 @@ from __future__ import absolute_import, division, print_function
 
 def main():
     """Handle command-line interface."""
-    from docopt import docopt
+    pass
 
-    arguments = docopt(__doc__)
 
 if __name__ == "__main__":
     main()
