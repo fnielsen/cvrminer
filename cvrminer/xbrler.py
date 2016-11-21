@@ -7,6 +7,7 @@ Usage:
   xbrler regnskabsdata1000-print-tag-value [options]
 
 Options:
+  --cvr=<cvr>
   --tag=<tag> -t=<tag>     Tag [default: NameOfReportingEntity]
   --from_date=<from_date>  Date in ISO format, e.g., "2014-09-01"
   --pretty                 Pretty printing
@@ -211,7 +212,7 @@ def _flatten_search_result(result):
     return result_output
 
 
-def search_for_regnskaber(from_date=None, to_date=None, size=10):
+def search_for_regnskaber(from_date=None, to_date=None, cvr=None, size=10):
     """Search virk.dk search API for regnskaber.
 
     This function will require Internet access as the API at
@@ -242,6 +243,8 @@ def search_for_regnskaber(from_date=None, to_date=None, size=10):
         ISO date for from date on offentliggoerelsesTidspunkt
     to_date : str
         ISO date for to date on offentliggoerelsesTidspunkt
+    cvr : str or int
+        CVR identifier.
     size : int
         Number of returned items
 
@@ -261,7 +264,7 @@ def search_for_regnskaber(from_date=None, to_date=None, size=10):
     """
     # Build query
     data = {}
-    data['query'] = {}
+    data['query'] = {'bool': {'must': []}}
     if size is not None:
         data['size'] = size
     if from_date is not None or to_date is not None:
@@ -274,7 +277,9 @@ def search_for_regnskaber(from_date=None, to_date=None, size=10):
             'offentliggoerelse.offentliggoerelsesTidspunkt':
             range_value
         }
-        data['query']['range'] = range_value
+        data['query']['bool']['must'].append({'range': range_value})
+    if cvr is not None:
+        data['query']['bool']['must'].append({'term': {'cvrNummer': cvr}})
 
     # Query Erhvervsstyrelsen API
     response = requests.post(SEARCH_URL, data=json.dumps(data),
@@ -448,6 +453,7 @@ def main():
     elif arguments['search']:
 
         regnskaber = search_for_regnskaber(
+            cvr=arguments['--cvr'],
             from_date=arguments['--from_date'],
             to_date=arguments['--to_date'],
             size=arguments['--size'])
