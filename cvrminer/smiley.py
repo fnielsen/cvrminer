@@ -35,7 +35,7 @@ SMILEY_SQLITE_FILENAME = 'SmileyStatus.db'
 class Smiley(object):
 
     def __init__(self, logging_level=logging.WARN):
-        
+
         self.logger = logging.getLogger(__name__)
         self.logger.addHandler(logging.NullHandler())
         self.logger.setLevel(logging_level)
@@ -62,7 +62,7 @@ class Smiley(object):
         """
         full_filename = self.full_filename(filename)
         return read_csv(full_filename, index_col=0, encoding='utf-8')
-    
+
     @property
     def db(self):
         """Return a db.py instance with Smiley data."""
@@ -104,8 +104,8 @@ class Smiley(object):
             df = self.read_csv_file(filename=csv_filename)
             self.logger.info('Writing "{table}" table'.format(table=table))
             df.to_sql(table, con=connection, if_exists=if_exists)
-    
-    
+
+
 def main():
     """Handle command-line interface."""
     from docopt import docopt
@@ -125,7 +125,7 @@ def main():
     if arguments['--debug']:
         logging_level = logging.DEBUG
 
-    smiley = Smiley()
+    smiley = Smiley(logging_level=logging_level)
 
     if arguments['build-sqlite-database']:
         smiley.build_sqlite_database()
