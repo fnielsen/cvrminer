@@ -4,6 +4,7 @@ Usage:
   xbrler print-tag-value [options] (<filename>|<filename>...)
   xbrler print-tags (<filename>|<filename>...)
   xbrler search [options]
+  xbrler regnskabsdata1000-print-tag-value [options]
 
 Options:
   --tag=<tag> -t=<tag>     Tag [default: NameOfReportingEntity]
@@ -91,7 +92,7 @@ def extract_tags(filename_or_file):
     return tags
 
 
-def extract_tag_value(filename, tag='NameOfReportingEntity'):
+def extract_tag_value(filename_or_file, tag='NameOfReportingEntity'):
     """Extract value for a specified tag.
 
     Extract the value from a name from specified field.
@@ -105,7 +106,7 @@ def extract_tag_value(filename, tag='NameOfReportingEntity'):
 
     Parameters
     ----------
-    filename : str
+    filename_or_file : str or file
         Filename of XBRL XML file.
     tag : str or None
         Tag to extract.
@@ -116,7 +117,11 @@ def extract_tag_value(filename, tag='NameOfReportingEntity'):
         Value of element text
 
     """
-    tree = etree.fromstring(open(filename, 'rb').read())
+    if hasattr(filename_or_file, 'read'):
+        f = filename_or_file
+    else:
+        f = open(filename_or_file, 'rb')
+    tree = etree.fromstring(f.read())
     elements = [element for element in tree.findall('.//')]
     for element in elements:
         if element.tag.endswith(tag):
@@ -452,6 +457,16 @@ def main():
                 pprint(regnskab)
             else:
                 print_(regnskab)
+
+    elif arguments['regnskabsdata1000-print-tag-value']:
+
+        rd = Regnskabsdata1000()
+
+        for f in rd.iter_files():
+            try:
+                print_tag_value(f, arguments['--tag'])
+            except etree.XMLSyntaxError as err:
+                print_(err, file=sys.stderr)
 
 
 if __name__ == '__main__':
