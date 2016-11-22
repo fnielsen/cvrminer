@@ -3,7 +3,8 @@
 from flask import render_template
 
 from . import app
-
+from ..xbrler import search_for_regnskaber
+from ..wikidata import cvr_to_q
 
 @app.route("/")
 def index():
@@ -21,4 +22,7 @@ def smiley():
 @app.route("/cvr/<int:cvr>")
 def show_cvr(cvr):
     """Return smiley page of for app."""
-    return render_template('cvr.html', cvr=cvr)
+    q = cvr_to_q(cvr)
+    regnskaber = search_for_regnskaber(cvr=cvr)
+    return render_template('cvr.html',
+                           cvr=cvr, regnskaber=regnskaber, q=q)
