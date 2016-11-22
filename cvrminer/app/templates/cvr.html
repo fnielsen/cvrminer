@@ -1,12 +1,43 @@
 {% extends "base.html" %}
 
-{% block content %}
+{% block page_content %}
 
-<div class="container">
+<h1>CVR: {{ cvr }}</h1>
 
-  <h1>CVR: {{ cvr }}</h1>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Start</th>
+      <th>End</th>
+      <th>CVR</th>
+      <th>Link</th>
+    </tr>
+  </thead>
 
+  {% for regnskab in regnskaber %}
+  <tr>
+    <td>{{ regnskab.startDato }}</td>
+    <td>{{ regnskab.slutDato }}</td>
+    <td>{{ regnskab.cvrNummer }}</td>
+    {% if regnskab.dokumentUrl %}
+    <td><a href="{{ regnskab.dokumentUrl }}">{{ regnskab.dokumentType }}</a></td>
+    {% else %}
+    <td>-</td>
+    {% endif %}
+  </tr>
+  {% endfor %}
+</table>
+
+
+{% if q %}
+
+<h2>Ownership graph based on Wikidata</h2>
+
+<div class="embed-responsive embed-responsive-4by3">
+  <iframe class="embed-responsive-item" src="https://query.wikidata.org/embed.html#%23defaultView%3AGraph%0APREFIX%20wd%3A%20%3Chttp%3A%2F%2Fwww.wikidata.org%2Fentity%2F%3E%0APREFIX%20wdt%3A%20%3Chttp%3A%2F%2Fwww.wikidata.org%2Fprop%2Fdirect%2F%3E%0APREFIX%20gas%3A%20%3Chttp%3A%2F%2Fwww.bigdata.com%2Frdf%2Fgas%23%3E%0A%0Aselect%20%0A%20%20%3Fowner%20%3FownerLabel%20%3Fowned%20%3FownedLabel%0Awhere%20%7B%0A%20%20%7B%20%0A%20%20%20%20select%0A%20%20%20%20%20%20%3Fowner1%20%3Fowned1%0A%20%20%20%20where%20%7B%0A%20%20%20%20%20%20service%20gas%3Aservice%20%7B%0A%20%20%20%20%20%20%20%20gas%3Aprogram%20gas%3AgasClass%20%22com.bigdata.rdf.graph.analytics.BFS%22%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3Ain%20wd%3A{{ q }}%20%3B%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3AtraversalDirection%20%22Undirected%22%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3Aout%20%3Fowned1%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3Aout1%20%3Fdepth%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3Aout2%20%3Fowner1%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3AlinkType%20wdt%3AP1830%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3AmaxIterations%205%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3AmaxVisited%20200%20.%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%0A%20%20%7D%0A%20%20%3Fowner%20wdt%3AP1830%20%3Fowned%20.%0A%20%20filter%20%28%3Fowner%20%3D%20%3Fowner1%20%20%7C%7C%20%3Fowner%20%3D%20%3Fowned1%20%7C%7C%20%3Fowned%20%3D%20%3Fowner1%20%7C%7C%20%3Fowned%20%3D%20%3Fowned1%29%20%20%0A%20%0A%20%20service%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22da%2Cen%22%20.%20%20%7D%20%0A%7D%20"></iframe>
 </div>
+
+{% endif %}
 
 
 {% endblock %}
