@@ -1,3 +1,5 @@
 docopt
+flask
+Flask-Bootstrap
 lxml
 requests
