@@ -1,4 +1,4 @@
-"""xbrler - handling of XBRL.
+r"""xbrler - handling of XBRL.
 
 Usage:
   xbrler print-tag-value [options] (<filename>|<filename>...)
@@ -304,6 +304,7 @@ class Regnskabsdata1000(object):
     """
 
     def __init__(self, logging_level=logging.WARN):
+        """Setup logger."""
         self.logger = logging.getLogger(__name__)
         self.logger.addHandler(logging.NullHandler())
         self.logger.setLevel(logging_level)
