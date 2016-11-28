@@ -8,34 +8,55 @@ Options:
   -v --verbose  Verbose messaging
   --debug
 
+References:
+  http://www.findsmiley.dk/Statistik/Smiley_data/
+
+
 """
 
 from __future__ import absolute_import, division, print_function
 
 import logging
 
-from os.path import join
+from os.path import join, split
 
 import sys
 
 import sqlite3
 
+from zipfile import ZipFile
+
 from db import DB
 
-from pandas import read_csv
+from pandas import read_csv, read_excel
+
+import requests
 
 from .config import data_directory
+
+from .utils import make_data_directory
 
 
 SMILEY_CSV_FILENAME = 'SmileyStatus.csv'
 
 SMILEY_SQLITE_FILENAME = 'SmileyStatus.db'
 
+SMILEY_ZIP_FILENAME = 'smileystatus.zip'
+
+SMILEY_URL = ('https://www.foedevarestyrelsen.dk/_layouts/15/sdata/'
+              'smileystatus.zip')
+
 
 class Smiley(object):
+    """Smiley.
 
+    References
+    ----------
+    http://www.findsmiley.dk/Statistik/Smiley_data/
+
+    """
     def __init__(self, logging_level=logging.WARN):
-
+        """Initialize logger."""
         self.logger = logging.getLogger(__name__)
         self.logger.addHandler(logging.NullHandler())
         self.logger.setLevel(logging_level)
@@ -45,6 +66,24 @@ class Smiley(object):
     def full_filename(self, filename):
         """Return full path filename for file."""
         return join(data_directory(), 'smiley', filename)
+
+    def download(self):
+        """Download remote Smiley data to local directory."""
+        directory = join(data_directory(), 'smiley')
+        self.logger.info('Making directory {}'.format(directory))
+        make_data_directory(directory)
+
+        url = SMILEY_URL
+        filename = split(url)[-1]
+        full_filename = self.full_filename(filename)
+
+        self.logger.info('Downloading {} to local file {}'.format(
+            url, full_filename))
+        response = requests.get(url, stream=True)
+        with open(full_filename, 'wb') as f:
+            for chunk in response.iter_content():
+                if chunk:
+                    f.write(chunk)
 
     def read_csv_file(self, filename=SMILEY_CSV_FILENAME):
         """Read CSV file with smiley status.
@@ -62,6 +101,24 @@ class Smiley(object):
         """
         full_filename = self.full_filename(filename)
         return read_csv(full_filename, index_col=0, encoding='utf-8')
+
+    def read_zipped_xls_file(self):
+        """Read zip XLS file with smiley status.
+
+        Returns
+        -------
+        df : pandas.DataFrame
+            Dataframe with smiley status information.
+
+        """
+        full_filename = self.full_filename(SMILEY_ZIP_FILENAME)
+        with ZipFile(full_filename) as f:
+            namelist = f.namelist()
+            if len(namelist) == 1:
+                df = read_excel(f.open(namelist[0]))
+            else:
+                raise IOError('Multiple files in {}'.format(full_filename))
+        return df
 
     @property
     def db(self):
@@ -84,6 +141,9 @@ class Smiley(object):
             csv_filename=SMILEY_CSV_FILENAME, if_exists='replace'):
         """Build SQLite database with Smiley data.
 
+        This will try to setup a sqlite database with smiley information from
+        the zipped xls file distributed from the homepage.
+
         Parameters
         ----------
         sqlite_filename : str, optional
@@ -99,9 +159,13 @@ class Smiley(object):
         self.logger.info('Building "{full_filename}" sqlite file'.format(
             full_filename=full_filename))
 
+        try:
+            df = self.read_zipped_xls_file()
+        except:
+            df = self.read_csv_file(filename=csv_filename)
+
         table = 'smiley'
         with sqlite3.connect(full_filename) as connection:
-            df = self.read_csv_file(filename=csv_filename)
             self.logger.info('Writing "{table}" table'.format(table=table))
             df.to_sql(table, con=connection, if_exists=if_exists)
 
