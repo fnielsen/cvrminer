@@ -6,6 +6,7 @@ from . import app
 from ..xbrler import search_for_regnskaber
 from ..wikidata import cvr_to_q
 
+
 @app.route("/")
 def index():
     """Return index page of for app."""
