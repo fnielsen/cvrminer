@@ -5,3 +5,4 @@ Flask-Bootstrap
 lxml
 numpy
 requests
+xlrb
