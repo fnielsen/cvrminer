@@ -223,13 +223,15 @@ class Virksomhed(object):
         Returns
         -------
         branchetekst : str or None
+
+        """
         try:
             branchetekst = self.data['_source']['Vrvirksomhed'][
                 'virksomhedMetadata']['nyesteHovedbranche']['branchetekst']
             return branchetekst
         except:
             return None
-    
+
     def features(self):
         """Return set of features for a virksomhed.
 
