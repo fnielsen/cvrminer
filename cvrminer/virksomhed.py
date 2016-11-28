@@ -199,6 +199,37 @@ class Virksomhed(object):
             year = nan
         return year
 
+    @property
+    def nyeste_hovedbranche_branchekode(self):
+        """Return branchekode.
+
+        Returns
+        -------
+        branchekode : str or None
+            Field of operation. None if not possible to decode.
+
+        """
+        try:
+            branchekode = self.data['_source']['Vrvirksomhed'][
+                'virksomhedMetadata']['nyesteHovedbranche']['branchekode']
+            return branchekode
+        except:
+            return None
+
+    @property
+    def nyeste_hovedbranche_branchetekst(self):
+        """Return newest 'branchetekst'.
+
+        Returns
+        -------
+        branchetekst : str or None
+        try:
+            branchetekst = self.data['_source']['Vrvirksomhed'][
+                'virksomhedMetadata']['nyesteHovedbranche']['branchetekst']
+            return branchetekst
+        except:
+            return None
+    
     def features(self):
         """Return set of features for a virksomhed.
 
@@ -216,6 +247,10 @@ class Virksomhed(object):
             ('nyeste_virksomhedsform', self.nyeste_virksomhedsform),
             ('reklamebeskyttet', self.reklamebeskyttet),
             ('sammensat_status', self.sammensat_status),
+            ('nyeste_hovedbranche_branchekode',
+             self.nyeste_hovedbranche_branchekode),
+            ('nyeste_hovedbranche_branchetekst',
+             self.nyeste_hovedbranche_branchetekst),
             ('nyeste_statuskode', self.nyeste_statuskode),
             ('stiftelsesaar', self.stiftelsesaar),
         ])
