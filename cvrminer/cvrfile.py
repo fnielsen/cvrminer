@@ -1,5 +1,8 @@
 """CVR miner.
 
+Usage:
+  cvrminer.cvrfile [<filename>]
+
 Handles JSONL files from CVR in Erhvervsstyrelsen with information about
 companies, places and participants.
 
@@ -213,7 +216,13 @@ def main():
     This will pretty print the JSONL file.
 
     """
-    pretty_print()
+    from docopt import docopt
+
+    arguments = docopt(__doc__)
+    if arguments['<filename>']:
+        pretty_print(arguments['<filename>'])
+    else:
+        pretty_print()
 
 
 if __name__ == '__main__':
