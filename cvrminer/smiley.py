@@ -55,6 +55,7 @@ class Smiley(object):
     http://www.findsmiley.dk/Statistik/Smiley_data/
 
     """
+
     def __init__(self, logging_level=logging.WARN):
         """Initialize logger."""
         self.logger = logging.getLogger(__name__)
