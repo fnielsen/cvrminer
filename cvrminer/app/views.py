@@ -12,7 +12,7 @@ main = Blueprint('app', __name__)
 @main.route("/")
 def index():
     """Return index page of for app."""
-    return render_template('base.html')
+    return render_template('index.html')
 
 
 @main.route("/smiley/")
