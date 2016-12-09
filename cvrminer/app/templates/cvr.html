@@ -4,6 +4,9 @@
 
 <h1>CVR: {{ cvr }}</h1>
 
+
+<h2>Financial statements</h2>
+
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -30,6 +33,14 @@
 
 
 {% if q %}
+
+
+<h2>Location</h2>
+
+<div class="embed-responsive embed-responsive-4by3">
+  <iframe class="embed-responsive-item" src="https://query.wikidata.org/embed.html#%23defaultView%3AMap%0ASELECT%20%2a%20WHERE%20%7B%20wd%3A{{ q }}%20wdt%3AP625%20%3Fgeo.%20%7D"></iframe>
+</div>
+
 
 <h2>Ownership graph based on Wikidata</h2>
 
