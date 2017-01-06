@@ -3,24 +3,19 @@
 Usage:
   cvrminer.cvrfile [<filename>]
 
-Handles JSONL files from CVR in Erhvervsstyrelsen with information about
-companies, places and participants.
+Description:
+  Handles JSONL files from CVR in Erhvervsstyrelsen (Danish Business Authority)
+  with information about companies, places and participants.
 
-Command-line usage
-------------------
+  JSON file structure
+  -------------------
+  _id : ID of some form
+  _index :
+  _source : Actual data
+  _type: 'virksomhed', 'produktionsenhed', 'deltager' or 'meta'
+  fields
 
-    $ python -m cvrminer.cvrfile
-
-
-JSON file structure
--------------------
-_id : ID of some form
-_index :
-_source : Actual data
-_type: 'virksomhed', 'produktionsenhed', 'deltager' or 'meta'
-fields
-
-The 'meta' type appear only once and with the entry:
+  The 'meta' type appear only once and with the entry:
     {"_index":"cvr-permanent-prod-20151209",
      "_type":"meta",
      "_id":"1",
@@ -29,19 +24,25 @@ The 'meta' type appear only once and with the entry:
        "NewestRetrievedFileTimestampForBeskaeftigelse":
          "2016-05-07T08:59:23.373+02:00"}}
 
+Example:
+  $ python -m cvrminer.cvrfile
+
 """
 
 import csv
 
-from gzip import GzipFile
+from gzip import open as gzip_open
 
 import json
+
+from os.path import expanduser, join
 
 from pprint import pprint
 
 from .virksomhed import Virksomhed
 
-JSONL_FILENAME = 'cvr-permanent.json'
+JSONL_FILENAME = join(expanduser('~'), 'cvrminer_data',
+                      'cvr-permanent.json.gz')
 # $ wc cvr-permanent.json
 #    4721004   127333568 42796650397 cvr-permanent.json
 
@@ -68,10 +69,13 @@ class CvrFile(object):
 
         """
         self.filename = filename
-        try:
-            self.fid = open(filename)
-        except IOError:
-            self.fid = GzipFile(filename + '.gz')
+        if filename.endswith('.gz'):
+            self.fid = gzip_open(filename)
+        else:
+            try:
+                self.fid = open(filename)
+            except IOError:
+                self.fid = gzip_open(filename + '.gz')
         self.line_number = 0
 
     def __iter__(self):
