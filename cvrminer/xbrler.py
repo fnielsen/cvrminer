@@ -1,6 +1,7 @@
 r"""xbrler - handling of XBRL.
 
 Usage:
+  xbrler pretty-print <filename>
   xbrler print-tag-value [options] (<filename>|<filename>...)
   xbrler print-tags (<filename>|<filename>...)
   xbrler search [options]
@@ -164,6 +165,16 @@ def print_name_and_surname_of_auditor(filename):
 
     """
     print_tag_value(filename, tag='NameAndSurnameOfAuditor')
+
+
+def pretty_print(filename_or_file):
+    """Pretty print XBRL file."""
+    if hasattr(filename_or_file, 'read'):
+        f = filename_or_file
+    else:
+        f = open(filename_or_file, 'rb')
+    tree = etree.fromstring(f.read())
+    print_(etree.tostring(tree, pretty_print=True))
 
 
 def _flatten_search_result(result):
@@ -425,7 +436,11 @@ def main():
 
     arguments = docopt(__doc__)
 
-    if arguments['print-tag-value']:
+    if arguments['pretty-print']:
+
+        pretty_print(arguments['<filename>'][0])
+
+    elif arguments['print-tag-value']:
 
         filenames = arguments['<filename>']
         if type(filenames) == str:
