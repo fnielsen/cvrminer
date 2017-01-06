@@ -1,23 +1,30 @@
 """cvrminer.
 
 Usage:
-  python -m cvrminer
+  cvrminer pretty-print <filename>
 
 Options:
   -h --help
 
-No functionality presently implemented here. Try `python -m cvrminer.cvrfile`
-instead.
+Try `python -m cvrminer.cvrfile` or `python -m cvrminer.xbrler`.
 
 """
 
 
 from __future__ import absolute_import, division, print_function
 
+from .xbrler import pretty_print
+
 
 def main():
     """Handle command-line interface."""
-    pass
+    from docopt import docopt
+
+    arguments = docopt(__doc__)
+
+    if arguments['pretty-print']:
+
+        pretty_print(arguments['<filename>'])
 
 
 if __name__ == "__main__":
