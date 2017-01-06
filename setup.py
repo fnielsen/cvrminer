@@ -9,4 +9,3 @@ setup(
     packages=['cvrminer'],
     tests_require=['flake8'],
 )
-  
