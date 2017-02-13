@@ -182,7 +182,7 @@ class Smiley(object):
         values = self.db.query('select cvrnr from smiley').values[:, 0]
         values = set([int(value) for value in values if value.is_integer()])
         return values
-        
+
 
 def main():
     """Handle command-line interface."""
