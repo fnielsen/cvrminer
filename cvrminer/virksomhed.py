@@ -147,7 +147,7 @@ class Virksomhed(object):
             # 'nyesteNavn' may be None
             value = ''
         return value
-        
+
     @property
     def nyeste_virksomhedsform(self):
         """Return 'virksomhedsform'.
