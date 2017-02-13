@@ -120,8 +120,8 @@ class CvrFile(object):
         """
         for n, obj in enumerate(self, start=1):
             if 'Vrvirksomhed' not in obj['_source']:
-                    continue
-            virksomhed = Virksomhed(obj)
+                continue
+            virksomhed = Virksomhed(obj['_source']['Vrvirksomhed'])
             yield virksomhed
 
     def iter_virksomhed_features(self):
