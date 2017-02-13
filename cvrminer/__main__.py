@@ -1,7 +1,7 @@
 """cvrminer.
 
 Usage:
-  cvrminer pretty-print <filename>
+  cvrminer pretty-print <xbrl_filename>
 
 Options:
   -h --help
@@ -24,7 +24,7 @@ def main():
 
     if arguments['pretty-print']:
 
-        pretty_print(arguments['<filename>'])
+        pretty_print(arguments['<xbrl_filename>'])
 
 
 if __name__ == "__main__":
