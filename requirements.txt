@@ -4,5 +4,6 @@ flask
 Flask-Bootstrap
 lxml
 numpy
+pymongo
 requests
 xlrd
