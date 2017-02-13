@@ -4,11 +4,20 @@ from collections import OrderedDict
 
 from re import findall
 
+from six import u
+
 from numpy import nan
 
 
 class Virksomhed(object):
-    """Encapsulate a single 'virksomhed' from CVR."""
+    """Encapsulate a single 'virksomhed' from CVR.
+
+    Attributes
+    ----------
+    data : dict
+        Virksomhed data from CVR file.
+
+    """
 
     def __init__(self, data):
         """Initial raw data storage.
@@ -44,7 +53,7 @@ class Virksomhed(object):
             Number of p-enheder from the 'antalPenhder field.
 
         """
-        value = self.data['_source']['Vrvirksomhed']['virksomhedMetadata'][
+        value = self.data['virksomhedMetadata'][
             'antalPenheder']
         return value
 
@@ -62,14 +71,33 @@ class Virksomhed(object):
             string 'None' is returned.
 
         """
-        value = self.data['_source']['Vrvirksomhed']['brancheAnsvarskode']
+        value = self.data['brancheAnsvarskode']
         return str(value)
 
     @property
     def cvr_nummer(self):
         """Return CVR number."""
-        value = self.data['_source']['Vrvirksomhed']['cvrNummer']
+        value = self.data['cvrNummer']
         return value
+
+    @property
+    def formaal(self):
+        """Return formaal, i.e., purposes.
+
+        Returns
+        -------
+        formaal : list of str
+            List of strings
+
+        """
+        formaal = []
+        for attribute in self.data['attributter']:
+            if attribute['type'] == u('FORM\xc5L'):
+                values = attribute['vaerdier']
+                for value in values:
+                    formaal.append(value['vaerdi'])
+                break
+        return formaal
 
     @property
     def foerste_deltager_navn(self):
@@ -83,7 +111,7 @@ class Virksomhed(object):
 
         """
         try:
-            name = self.data['_source']['Vrvirksomhed']['deltagerRelation'][0][
+            name = self.data['deltagerRelation'][0][
                 'deltager']['navne'][0]['navn']
         except (KeyError, IndexError, TypeError):
             name = ''
@@ -98,7 +126,7 @@ class Virksomhed(object):
 
         """
         try:
-            value = self.data['_source']['Vrvirksomhed']['virksomhedMetadata'][
+            value = self.data['virksomhedMetadata'][
                 'nyesteAarsbeskaeftigelse']['intervalKodeAntalAnsatte']
             numbers = findall('\d+', value)
             return int(numbers[0])
@@ -113,7 +141,7 @@ class Virksomhed(object):
 
         """
         try:
-            value = self.data['_source']['Vrvirksomhed']['virksomhedMetadata'][
+            value = self.data['virksomhedMetadata'][
                 'nyesteVirksomhedsform']['langBeskrivelse']
             return value
         except:
@@ -130,7 +158,7 @@ class Virksomhed(object):
 
         """
         try:
-            statuskode = self.data['_source']['Vrvirksomhed'][
+            statuskode = self.data[
                 'virksomhedMetadata']['nyesteStatus']['statuskode']
             return str(statuskode)
         except:
@@ -139,14 +167,13 @@ class Virksomhed(object):
     @property
     def reklamebeskyttet(self):
         """Return 'reklamebeskyttet'."""
-        value = self.data['_source']['Vrvirksomhed']['reklamebeskyttet']
+        value = self.data['reklamebeskyttet']
         return value
 
     @property
     def sammensat_status(self):
         """Return 'sammensatStatus'."""
-        value = self.data['_source']['Vrvirksomhed'][
-            'virksomhedMetadata']['sammensatStatus']
+        value = self.data['virksomhedMetadata']['sammensatStatus']
         return value
 
     @property
@@ -160,8 +187,7 @@ class Virksomhed(object):
             'virksomhedstatus' is zero an empty string is returned.
 
         """
-        virksomhedsstatus = self.data['_source']['Vrvirksomhed'][
-            'virksomhedsstatus']
+        virksomhedsstatus = self.data['virksomhedsstatus']
         if len(virksomhedsstatus) == 0:
             return ''
         else:
@@ -177,8 +203,7 @@ class Virksomhed(object):
             Stiftelsesdato from 'virksomhedMetadata' as a string.
 
         """
-        value = self.data['_source']['Vrvirksomhed']['virksomhedMetadata'][
-            'stiftelsesDato']
+        value = self.data['virksomhedMetadata']['stiftelsesDato']
         return value
 
     @property
@@ -210,7 +235,7 @@ class Virksomhed(object):
 
         """
         try:
-            branchekode = self.data['_source']['Vrvirksomhed'][
+            branchekode = self.data[
                 'virksomhedMetadata']['nyesteHovedbranche']['branchekode']
             return branchekode
         except:
@@ -226,7 +251,7 @@ class Virksomhed(object):
 
         """
         try:
-            branchetekst = self.data['_source']['Vrvirksomhed'][
+            branchetekst = self.data[
                 'virksomhedMetadata']['nyesteHovedbranche']['branchetekst']
             return branchetekst
         except:
