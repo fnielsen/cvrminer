@@ -134,6 +134,21 @@ class Virksomhed(object):
             return nan
 
     @property
+    def nyeste_navn(self):
+        """Return 'nyesteNavn'.
+
+        If the ['virksomhedMetadata']['nyesteNavn']['navn'] field cannot be
+        accessed the an empty string is returned.
+
+        """
+        try:
+            value = self.data['virksomhedMetadata']['nyesteNavn']['navn']
+        except TypeError:
+            # 'nyesteNavn' may be None
+            value = ''
+        return value
+        
+    @property
     def nyeste_virksomhedsform(self):
         """Return 'virksomhedsform'.
 
