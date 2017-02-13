@@ -170,6 +170,19 @@ class Smiley(object):
             self.logger.info('Writing "{table}" table'.format(table=table))
             df.to_sql(table, con=connection, if_exists=if_exists)
 
+    def all_cvrs(self):
+        """Return set of all cvr.
+
+        Returns
+        -------
+        values : set of int
+            Set of integers representing CVR numbers.
+
+        """
+        values = self.db.query('select cvrnr from smiley').values[:, 0]
+        values = set([int(value) for value in values if value.is_integer()])
+        return values
+        
 
 def main():
     """Handle command-line interface."""
