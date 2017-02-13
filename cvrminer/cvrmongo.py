@@ -109,7 +109,7 @@ class CvrMongo(object):
         for company in self.iter_companies():
             if company['cvrNummer'] in smiley_cvrs:
                 yield company
-            
+
     def get_company(self, cvr_nummer):
         """Return company data from CVR.
 
