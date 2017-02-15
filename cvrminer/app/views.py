@@ -37,7 +37,6 @@ def add_app_url_map_converter(self, func, name=None):
     self.record_once(register_converter)
 
 
-
 Blueprint.add_app_url_map_converter = add_app_url_map_converter
 main = Blueprint('app', __name__)
 main.add_app_url_map_converter(RegexConverter, 'regex')
