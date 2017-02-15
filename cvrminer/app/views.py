@@ -91,7 +91,7 @@ def show_branche(q):
 
 
 @main.route('/branch/')
-def show_work_empty():
+def show_branch_empty():
     """Return rendered index page for branch.
 
     Returns
