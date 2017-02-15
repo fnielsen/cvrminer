@@ -1,16 +1,17 @@
 {% extends "branch_base.html" %}
 
+
 {% block page_content %}
 
 
-<h1>Branch</h1>
+<h1 id="h1">Branch</h1>
 
-<h2>Examples</h2>
 
-<ul>
-  <li><a href="Q507443">Pharmaceutical industry</a>
-</ul>
+<h2>Companies within the branch</h2>
+
+<div class="embed-responsive embed-responsive-16by9">
+  <iframe class="embed-responsive-item" src="https://query.wikidata.org/embed.html#select%20%2a%20where%20%7B%0A%20%20%3Fcompany%20wdt%3AP452%2Fwdt%3AP279%2a%20wd%3A{{ q }}%20.%0A%20%20optional%20%7B%20%3Fcompany%20rdfs%3Alabel%20%3Fcompany_label%20.%20filter%28lang%28%3Fcompany_label%29%20%3D%20%27da%27%29%20%7D%0A%20%20optional%20%7B%0A%20%20%20%20%3Fcompany%20wdt%3AP17%20%3Fcountry%20.%0A%20%20%20%20%3Fcountry%20rdfs%3Alabel%20%3Fcountry_label%20.%20filter%28lang%28%3Fcountry_label%29%20%3D%20%27da%27%29%20%0A%20%20%7D%0A%7D%0Aorder%20by%20desc%28%3Fcompany_label%29"></iframe>
+</div>
 
 
 {% endblock %}
-
