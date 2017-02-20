@@ -1,6 +1,7 @@
 """smiley.
 
 Usage:
+  cvrminer.smiley all-cvrs [options]
   cvrminer.smiley build-sqlite-database [options]
   cvrminer.smiley query [options] [<query>]
 
@@ -14,6 +15,9 @@ Options:
 Examples:
   $ python -m cvrminer.smiley query 'postnr="2800"' 2> /dev/null | wc
       363    4243  118597
+
+  $ python -m cvrminer.smiley all-cvrs 2> /dev/null | wc
+    33690   33690  303210
 
 References:
   http://www.findsmiley.dk/Statistik/Smiley_data/
@@ -233,13 +237,20 @@ def main():
 
     smiley = Smiley(logging_level=logging_level)
 
-    if arguments['build-sqlite-database']:
+    if arguments['all-cvrs']:
+        for cvr in sorted(smiley.all_cvrs()):
+            print(cvr)
+
+    elif arguments['build-sqlite-database']:
         smiley.build_sqlite_database()
 
     elif arguments['query']:
         query = arguments['<query>']
         df = smiley.where(query)
         write(output_file, df.to_csv(index=False, encoding=output_encoding))
+
+    else:
+        assert False
 
 
 if __name__ == '__main__':
