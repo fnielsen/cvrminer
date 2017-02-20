@@ -2,15 +2,21 @@
 
 Usage:
   cvrminer.smiley build-sqlite-database [options]
+  cvrminer.smiley query [options] [<query>]
 
 Options:
-  -h --help     Help message
-  -v --verbose  Verbose messaging
-  --debug
+  -h --help           Help message.
+  --oe=<encoding>     Output encoding [default: utf-8].
+  -o --output=<file>  Output filename, default output to stdout.
+  -v --verbose        Verbose messaging.
+  --debug             Debug messages.
+
+Examples:
+  $ python -m cvrminer.smiley query 'postnr="2800"' 2> /dev/null | wc
+      363    4243  118597
 
 References:
   http://www.findsmiley.dk/Statistik/Smiley_data/
-
 
 """
 
@@ -18,7 +24,11 @@ from __future__ import absolute_import, division, print_function
 
 import logging
 
+import os
+from os import write
 from os.path import join, split
+
+import signal
 
 import sys
 
@@ -183,6 +193,13 @@ class Smiley(object):
         values = set([int(value) for value in values if value.is_integer()])
         return values
 
+    def where(self, expression=None):
+        if expression is None:
+            query = 'select * from smiley;'
+        else:
+            query = 'select * from smiley where ' + expression
+        return self.db.query(query)
+
 
 def main():
     """Handle command-line interface."""
@@ -203,10 +220,26 @@ def main():
     if arguments['--debug']:
         logging_level = logging.DEBUG
 
+    if arguments['--output']:
+        output_filename = arguments['--output']
+        output_file = os.open(output_filename, os.O_RDWR | os.O_CREAT)
+    else:
+        # stdout
+        output_file = 1
+    output_encoding = arguments['--oe']
+
+    # Ignore broken pipe errors
+    signal.signal(signal.SIGPIPE, signal.SIG_DFL)
+
     smiley = Smiley(logging_level=logging_level)
 
     if arguments['build-sqlite-database']:
         smiley.build_sqlite_database()
+
+    elif arguments['query']:
+        query = arguments['<query>']
+        df = smiley.where(query)
+        write(output_file, df.to_csv(index=False, encoding=output_encoding))
 
 
 if __name__ == '__main__':
