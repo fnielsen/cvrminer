@@ -55,7 +55,7 @@ class CvrFile(object):
     >>> for item in CvrFile():
     ...     print(str(item['_type']))
     ...     break
-    'virksomhed'
+    virksomhed
 
     """
 
