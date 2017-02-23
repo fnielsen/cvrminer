@@ -10,23 +10,36 @@ at
 beskæfiger
 beskægtet
 beslgtet
+beslutning
+beslutte
+besluttet
 beslægtede
 beslægtet
+bestemmelse
+bestemmelser
 bestyrelsen
 bestyrelsens
+direktionens opfattelse
 bestyrelsens skøn
+direktionens vurdering
 bestående
+både
 de
 delvist
 den
 denne
+Der
 der
 derigennem
 dermed
 dertil
+desuden
 Det
 det
 dette
+direktionen
+direktionens
+direktionens opfattelse
 direktionens skøn
 direktørens skøn
 disse
@@ -40,6 +53,7 @@ enhver
 er
 ethvert
 eventuelt
+finder naturligt
 for
 foran
 forbindelse
@@ -49,9 +63,13 @@ forbundne
 forenelig
 forenelige
 formål
+førnævnte
 har
-helt
+heraf
+herindunder
 hermed
+herom
+helt
 hertil
 herunder
 hvad
@@ -59,10 +77,12 @@ hørende
 i
 inden
 indenfor
+indvidere
 iøvrigt
 knyttet
 kunne
 ledelsens skøn
+ligeledes
 ligesom
 lignende
 kan
@@ -70,9 +90,14 @@ knyttede
 med
 m
 men
+mene
 mm
 mv
+må
+måtte
+nogen
 næring
+nærmere
 nævnt
 nævnte
 og
@@ -92,9 +117,13 @@ og lignende, som direktionen/bestyrelsen finder naturligt i forbindelse med sels
 om
 omkring
 også
+opfattelse
+ovennævnte
 på
 relaterede
 samme
+sammen
+Samt
 samt
 samt al virksomhed, som er beslæget hermed
 samt anden i forbindelse hermed stående virksomhed
@@ -112,11 +141,14 @@ som er beslæget hermed
 som følge af
 Selskabet
 selskabet
+selskabets
+selskabets drift
 Selskabets formål er
 Selskabets formål er at
 sig
 skal
 skøn
+skønnes
 som
 stående
 står
@@ -128,6 +160,7 @@ sådanne
 således
 såvel
 til
+tilhørende
 tilknytning
 tilknyttede
 tilknyttet
