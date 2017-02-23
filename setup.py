@@ -11,6 +11,11 @@ setup(
     author='Finn Aarup Nielsen',
     author_email='faan@dtu.dk',
     license='Apache License',
+    package_data={
+        'cvrminer': [
+            'data/purpose_stop_words.txt',
+        ]
+    },
     install_requires=requirements,
     url='https://github.com/fnielsen/cvrminer',
     packages=['cvrminer'],
