@@ -1,4 +1,4 @@
-u"""Companies with multiple purposes.
+ur"""Companies with multiple purposes.
 
 An example is 31862132
 
