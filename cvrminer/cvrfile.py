@@ -70,12 +70,12 @@ class CvrFile(object):
         """
         self.filename = filename
         if filename.endswith('.gz'):
-            self.fid = gzip_open(filename)
+            self.fid = gzip_open(filename, mode='rt')
         else:
             try:
                 self.fid = open(filename)
             except IOError:
-                self.fid = gzip_open(filename + '.gz')
+                self.fid = gzip_open(filename + '.gz', mode='rt')
         self.line_number = 0
 
     def __iter__(self):
@@ -83,7 +83,7 @@ class CvrFile(object):
         return self
 
     def __next__(self):
-        """Return data from line in JSONL file.
+        """Return data from line in NDJSON file.
 
         Returns
         -------
