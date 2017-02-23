@@ -198,6 +198,19 @@ class Smiley(object):
         return values
 
     def where(self, expression=None):
+        """Query database from expression.
+
+        Parameters
+        ----------
+        expression : str
+            Expression to use in SQL query.
+
+        Returns
+        -------
+        df : pandas.DataFrame
+            Dataframe.
+
+        """
         if expression is None:
             query = 'select * from smiley;'
         else:
