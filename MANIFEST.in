@@ -1,2 +1,3 @@
+include requirements.txt
 include requirements.txtinclude versioneer.py
 include cvrminer/_version.py
