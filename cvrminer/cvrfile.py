@@ -1,7 +1,8 @@
 """CVR miner.
 
 Usage:
-  cvrminer.cvrfile [<filename>]
+  cvrminer.cvrfile show-file [<filename>]
+  cvrminer.cvrfile write-virksomhed-features-file
 
 Description:
   Handles JSONL files from CVR in Erhvervsstyrelsen (Danish Business Authority)
@@ -25,7 +26,7 @@ Description:
          "2016-05-07T08:59:23.373+02:00"}}
 
 Example:
-  $ python -m cvrminer.cvrfile
+  $ python -m cvrminer.cvrfile show-file
 
 """
 
@@ -223,10 +224,19 @@ def main():
     from docopt import docopt
 
     arguments = docopt(__doc__)
-    if arguments['<filename>']:
-        pretty_print(arguments['<filename>'])
+
+    if arguments['show-file']:
+        if arguments['<filename>']:
+            pretty_print(arguments['<filename>'])
+        else:
+            pretty_print()
+
+    elif arguments['write-virksomhed-features-file']:
+        cvr_file = CvrFile()
+        cvr_file.write_virksomhed_features_file()
+
     else:
-        pretty_print()
+        assert False
 
 
 if __name__ == '__main__':
