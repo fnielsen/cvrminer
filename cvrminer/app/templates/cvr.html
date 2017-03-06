@@ -13,7 +13,8 @@
       <th>Start</th>
       <th>End</th>
       <th>CVR</th>
-      <th>Link</th>
+      <th>PDF</th>
+      <th>XBRL</th>
     </tr>
   </thead>
 
@@ -22,8 +23,13 @@
     <td>{{ regnskab.startDato }}</td>
     <td>{{ regnskab.slutDato }}</td>
     <td>{{ regnskab.cvrNummer }}</td>
-    {% if regnskab.dokumentUrl %}
-    <td><a href="{{ regnskab.dokumentUrl }}">{{ regnskab.dokumentType }}</a></td>
+    {% if regnskab.dokumentUrlPdf %}
+    <td><a href="{{ regnskab.dokumentUrlPdf }}">{{ regnskab.dokumentType }}</a></td>
+    {% else %}
+    <td>-</td>
+    {% endif %}
+    {% if regnskab.dokumentUrlXml %}
+    <td><a href="{{ regnskab.dokumentUrlXml }}">{{ regnskab.dokumentType }}</a></td>
     {% else %}
     <td>-</td>
     {% endif %}
