@@ -211,7 +211,7 @@ def _flatten_search_result(result):
     regnskabsperiode = result['regnskab']['regnskabsperiode']
     result_output['slutDato'] = regnskabsperiode['slutDato']
     result_output['startDato'] = regnskabsperiode['startDato']
-    
+
     result_output['dokumentType'] = None
     result_output['dokumentUrlPdf'] = None
     result_output['dokumentUrlXml'] = None
@@ -224,12 +224,12 @@ def _flatten_search_result(result):
             result_output['dokumentType'] = dokument['dokumentType']
         elif dokument['dokumentMimeType'] == 'application/zip':
             # May be "dukomentType=IFRS_EXTENSION"
-            pass 
+            pass
         else:
             # assert False
             # This should be logged
             pass
-            
+
     return result_output
 
 
