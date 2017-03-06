@@ -226,8 +226,10 @@ def _flatten_search_result(result):
             # May be "dukomentType=IFRS_EXTENSION"
             pass 
         else:
-            assert False
-
+            # assert False
+            # This should be logged
+            pass
+            
     return result_output
 
 
