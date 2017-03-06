@@ -211,15 +211,23 @@ def _flatten_search_result(result):
     regnskabsperiode = result['regnskab']['regnskabsperiode']
     result_output['slutDato'] = regnskabsperiode['slutDato']
     result_output['startDato'] = regnskabsperiode['startDato']
-
+    
+    result_output['dokumentType'] = None
+    result_output['dokumentUrlPdf'] = None
+    result_output['dokumentUrlXml'] = None
     for dokument in result['dokumenter']:
         if dokument['dokumentMimeType'] == 'application/xml':
+            result_output['dokumentUrlXml'] = dokument['dokumentUrl']
             result_output['dokumentType'] = dokument['dokumentType']
-            result_output['dokumentUrl'] = dokument['dokumentUrl']
-            break
-    else:
-        result_output['dokumentType'] = None
-        result_output['dokumentUrl'] = None
+        elif dokument['dokumentMimeType'] == 'application/pdf':
+            result_output['dokumentUrlPdf'] = dokument['dokumentUrl']
+            result_output['dokumentType'] = dokument['dokumentType']
+        elif dokument['dokumentMimeType'] == 'application/zip':
+            # May be "dukomentType=IFRS_EXTENSION"
+            pass 
+        else:
+            assert False
+
     return result_output
 
 
