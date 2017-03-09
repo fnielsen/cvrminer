@@ -285,7 +285,7 @@ class Virksomhed(object):
         except:
             return None
 
-    def field_counts(self):
+    def count_fields(self):
         """Return counts for occurrence of fields.
 
         Returns
@@ -297,7 +297,7 @@ class Virksomhed(object):
         Examples
         --------
         >>> virksomhed = Virksomhed({'cvrNummer': 33628234})
-        >>> virksomhed.field_counts()
+        >>> virksomhed.count_fields()
         Counter({'cvrNummer': 1})
 
         """
@@ -367,7 +367,7 @@ def main():
 
         cvr_mongo = cvrmongo.CvrMongo()
         virksomhed = Virksomhed(cvr_mongo.get_company(cvr))
-        counts = virksomhed.field_counts()
+        counts = virksomhed.count_fields()
         for field, count in counts.items():
             print("{:3} {}".format(count, field))
 
