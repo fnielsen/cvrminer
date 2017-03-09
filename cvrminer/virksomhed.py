@@ -1,12 +1,25 @@
-"""Virksomhed."""
+"""Virksomhed.
 
-from collections import OrderedDict
+Usage:
+  cvrminer.virksomhed field-counts <cvr>
+
+Examples:
+  $ python -m cvrminer.virksomhed field-counts 33628234
+
+"""
+
+
+from __future__ import absolute_import, division, print_function
+
+from collections import Counter, OrderedDict
 
 from re import findall
 
 from six import u
 
 from numpy import nan
+
+from six import integer_types, text_type
 
 
 class Virksomhed(object):
@@ -272,6 +285,50 @@ class Virksomhed(object):
         except:
             return None
 
+    def field_counts(self):
+        """Return counts for occurrence of fields.
+
+        Returns
+        -------
+        counts : collections.Counter
+            Dictionary (Counter) with keys a '.'-separated field names and
+            values as the number of times the field occurs.
+
+        Examples
+        --------
+        >>> virksomhed = Virksomhed({'cvrNummer': 33628234})
+        >>> virksomhed.field_counts()
+        Counter({'cvrNummer': 1})
+
+        """
+        def _process_field(field, value):
+            if isinstance(value, list):
+                for element in value:
+                    for returned_field in _process_field(field, element):
+                        yield returned_field
+            elif isinstance(value, dict):
+                for key, dict_value in value.items():
+                    for returned_field in _process_field(
+                            field + '.' + key, dict_value):
+                        yield returned_field
+            elif isinstance(value, integer_types):
+                yield field
+            elif isinstance(value, text_type):
+                yield field
+            elif value is None:
+                pass
+            elif field == '._id':
+                pass
+            else:
+                # Unhandle type
+                assert False
+
+        # Need to remove initial '.'
+        counts = Counter((field[1:]
+                          for field in _process_field('', self.data)))
+
+        return counts
+
     def features(self):
         """Return set of features for a virksomhed.
 
@@ -296,3 +353,24 @@ class Virksomhed(object):
             ('nyeste_statuskode', self.nyeste_statuskode),
             ('stiftelsesaar', self.stiftelsesaar),
         ])
+
+
+def main():
+    """Handle command-line interface."""
+    from docopt import docopt
+    from . import cvrmongo
+
+    arguments = docopt(__doc__)
+
+    if arguments['field-counts']:
+        cvr = arguments['<cvr>']
+
+        cvr_mongo = cvrmongo.CvrMongo()
+        virksomhed = Virksomhed(cvr_mongo.get_company(cvr))
+        counts = virksomhed.field_counts()
+        for field, count in counts.items():
+            print("{:3} {}".format(count, field))
+
+
+if __name__ == '__main__':
+    main()
