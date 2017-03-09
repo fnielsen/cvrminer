@@ -1,10 +1,10 @@
-ur"""Companies with multiple purposes.
+"""Companies with multiple purposes.
 
 An example is 31862132
 
-"Selskabets form\xe5l er at eje kapitalandele og likvide midler"
+"Selskabets formal er at eje kapitalandele og likvide midler"
 
-"Selskabets form\xe5l er formueadministration"
+"Selskabets formal er formueadministration"
 
 """
 
