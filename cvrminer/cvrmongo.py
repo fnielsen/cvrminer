@@ -38,7 +38,6 @@ from pymongo.errors import DuplicateKeyError
 
 from .cvrfile import CvrFile
 from .smiley import Smiley
-from .virksomhed import Virksomhed
 
 
 class CvrMongo(object):
@@ -131,6 +130,7 @@ class CvrMongo(object):
 def main():
     """Handle command-line interface."""
     from docopt import docopt
+    from .virksomhed import Virksomhed
 
     arguments = docopt(__doc__)
 
