@@ -39,7 +39,7 @@ for company in cvr_mongo.iter_companies():
         words = word_tokenizer.tokenize(cleaned_purpose)
         for word in words:
             word = word.lower()
-            if not word in w2v.model:
+            if word not in w2v.model:
                 phrase = decompounder.decompound_word(word)
                 for subphrase in phrase.split(' '):
                     if subphrase not in w2v.model:
