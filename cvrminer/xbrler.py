@@ -3,6 +3,7 @@ r"""xbrler - handling of XBRL.
 Usage:
   xbrler pretty-print <filename>
   xbrler print-tag-value [options] (<filename>|<filename>...)
+  xbrler print-tag-values [options] (<filename>|<filename>...)
   xbrler print-tags (<filename>|<filename>...)
   xbrler search [options]
   xbrler regnskabsdata1000-print-tag-value [options]
@@ -119,15 +120,49 @@ def extract_tag_value(filename_or_file, tag='NameOfReportingEntity'):
         Value of element text
 
     """
+    values = extract_tag_values(filename_or_file, tag=tag)
+    if values:
+        return values
+    else:
+        return None
+
+
+def extract_tag_values(filename_or_file, tag='NameOfReportingEntity'):
+    """Extract value for a specified tag.
+
+    Extract the value from a name from specified field.
+
+    Possible tags are
+    - NameOfReportingEntity
+    - NameAndSurnameOfAuditor
+    - DateOfGeneralMeeting
+    - PlaceOfSignatureOfStatement
+    - and many others
+
+    Parameters
+    ----------
+    filename_or_file : str or file
+        Filename of XBRL XML file.
+    tags : str or None
+        Tag to extract.
+
+    Returns
+    -------
+    value : list
+        List of string with values of element text
+
+    """
     if hasattr(filename_or_file, 'read'):
         f = filename_or_file
     else:
         f = open(filename_or_file, 'rb')
     tree = etree.fromstring(f.read())
     elements = [element for element in tree.findall('.//')]
+    values = []
     for element in elements:
         if element.tag.endswith(tag):
-            return element.text
+            values.append(element.text)
+    return values
 
 
 def print_tag_value(filename, tag='NameOfReportingEntity'):
@@ -151,6 +186,31 @@ def print_tag_value(filename, tag='NameOfReportingEntity'):
 
     """
     print_(extract_tag_value(filename, tag=tag))
+
+
+def print_tag_values(filename, tag='NameOfReportingEntity'):
+    """Print value for a specified tag.
+
+    Prints the values from a name from specified field.
+
+    Possible tags are
+    - NameOfReportingEntity
+    - NameAndSurnameOfAuditor
+    - DateOfGeneralMeeting
+    - PlaceOfSignatureOfStatement
+    - and many others
+
+    Parameters
+    ----------
+    filename : str
+        Filename of XBRL XML file.
+    tag : str
+        Tag to print.
+
+    """
+    values = extract_tag_values(filename, tag=tag)
+    for value in values:
+        print_(value)
 
 
 def print_name_and_surname_of_auditor(filename):
@@ -463,6 +523,19 @@ def main():
             except etree.XMLSyntaxError as err:
                 print_(err, file=sys.stderr)
 
+    elif arguments['print-tag-values']:
+
+        filenames = arguments['<filename>']
+        if type(filenames) == str:
+            filenames = [filenames]
+
+        for filename in filenames:
+            try:
+                print_tag_values(filename,
+                                 arguments['--tag'])
+            except etree.XMLSyntaxError as err:
+                print_(err, file=sys.stderr)
+
     elif arguments['print-tags']:
 
         filenames = arguments['<filename>']
@@ -499,6 +572,10 @@ def main():
                 print_tag_value(f, arguments['--tag'])
             except etree.XMLSyntaxError as err:
                 print_(err, file=sys.stderr)
+
+    else:
+        # Something is wrong with command-line parsing if we end here
+        assert False
 
 
 if __name__ == '__main__':
