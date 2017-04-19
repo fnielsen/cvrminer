@@ -100,3 +100,34 @@ def show_branch_empty():
 
     """
     return render_template('branch_empty.html')
+
+
+@main.route('/exchange/')
+def show_exchange_empty():
+    """Return rendered index page for branch.
+
+    Returns
+    -------
+    html : str
+        Rendered HTML page for branch index page.
+
+    """
+    return render_template('exchange_empty.html')
+
+
+@main.route('/exchange/' + q_pattern)
+def show_exchange(q):
+    """Return HTML rendering for specific exchange.
+
+    Parameters
+    ----------
+    q : str
+        Wikidata item identifier.
+
+    Returns
+    -------
+    html : str
+        Rendered HTML.
+
+    """
+    return render_template('exchange.html', q=q)
