@@ -1,0 +1,15 @@
+{% extends "exchange_base.html" %}
+
+{% block page_content %}
+
+<h1>Exchange: {{ q }}</h1>
+
+
+<h2>List of companies</h2>
+
+<div class="embed-responsive embed-responsive-4by3">
+  <iframe class="embed-responsive-item" src="https://query.wikidata.org/embed.html#SELECT%20%3Fcompany%20%3FcompanyLabel%20%3Fsymbol%20%0AWITH%20%7B%0A%20%20SELECT%20%3Fcompany%20%3Fsymbol%20WHERE%20%7B%0A%20%20%20%20%3Fcompany%20p%3AP414%20%3Fexchange_statement%20.%0A%20%20%20%20%3Fexchange_statement%20ps%3AP414%20wd%3AQ1019983%20.%20%0A%20%20%20%20optional%20%7B%20%3Fexchange_statement%20pq%3AP249%20%3Fsymbol%20.%20%7D%0A%20%20%7D%0A%7D%20AS%20%25result%0AWHERE%20%7B%0A%20%20INCLUDE%20%25result%20.%0A%20%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22da%2Cen%22%20.%20%7D%20%0A%7D%0A"></iframe>
+</div>
+
+
+{% endblock %}
