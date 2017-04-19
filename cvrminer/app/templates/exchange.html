@@ -12,4 +12,11 @@
 </div>
 
 
+<h2>Map of headquarters</h2>
+
+<div class="embed-responsive embed-responsive-4by3">
+  <iframe class="embed-responsive-item" src="https://query.wikidata.org/embed.html#%23defaultView%3AMap%0A%23defaultView%3AMap%0ASELECT%20%3Fgeo%20%3Fcompany%20%3FcompanyLabel%20%3Fsymbol%20%0AWITH%20%7B%0A%20%20SELECT%20%3Fcompany%20%3Fsymbol%20%3Fgeo%20WHERE%20%7B%0A%20%20%20%20%3Fcompany%20p%3AP414%20%3Fexchange_statement%20.%0A%20%20%20%20%3Fexchange_statement%20ps%3AP414%20wd%3AQ1019983%20.%20%0A%20%20%20%20optional%20%7B%20%3Fexchange_statement%20pq%3AP249%20%3Fsymbol%20.%20%7D%0A%20%20%20%20%23%20%3Fcompany%20wdt%3AP159%2a%2Fwdt%3AP625%20%3Fgeo%20.%0A%20%20%20%20%3Fcompany%20p%3AP159%2Fpq%3AP625%20%3Fgeo%20.%0A%20%20%7D%0A%7D%20AS%20%25result%0AWHERE%20%7B%0A%20%20INCLUDE%20%25result%20.%0A%20%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22da%2Cen%22%20.%20%7D%20%0A%7D%0A"></iframe>
+</div>
+
+
 {% endblock %}
