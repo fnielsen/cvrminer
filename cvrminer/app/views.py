@@ -112,7 +112,7 @@ def show_company_empty():
         Rendered HTML page for branch index page.
 
     """
-    return render_template('branch_company.html')
+    return render_template('company_empty.html')
 
 
 @main.route('/company/' + q_pattern)
