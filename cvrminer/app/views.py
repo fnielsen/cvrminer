@@ -102,6 +102,37 @@ def show_branch_empty():
     return render_template('branch_empty.html')
 
 
+@main.route('/company/')
+def show_company_empty():
+    """Return rendered index page for company.
+
+    Returns
+    -------
+    html : str
+        Rendered HTML page for branch index page.
+
+    """
+    return render_template('branch_company.html')
+
+
+@main.route('/company/' + q_pattern)
+def show_company(q):
+    """Return HTML rendering for specific company.
+
+    Parameters
+    ----------
+    q : str
+        Wikidata item identifier.
+
+    Returns
+    -------
+    html : str
+        Rendered HTML.
+
+    """
+    return render_template('company.html', q=q)
+
+
 @main.route('/exchange/')
 def show_exchange_empty():
     """Return rendered index page for branch.
