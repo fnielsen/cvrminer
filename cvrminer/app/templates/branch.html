@@ -1,6 +1,38 @@
 {% extends "branch_base.html" %}
 
 
+{% block scripts %}
+{{super()}}
+
+<script type="text/javascript">
+  listOfCompaniesSparql = `
+SELECT ?company ?companyLabel ?country ?countryLabel
+WITH {
+  SELECT ?company ?country WHERE {
+    ?company wdt:P452/wdt:P279* wd:{{ q }} .
+    OPTIONAL { ?company wdt:P17 ?country . }
+  }
+} AS %result
+WHERE {
+  INCLUDE %result
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en,da,de,fr,jp,nl,no,pl,ru,sv,zh". }
+}
+ORDER BY ?companyLabel
+ `
+
+ 
+ $(document).ready(function() {
+   console.log('In ready')
+   sparqlToDataTable(listOfCompaniesSparql, "#list-of-companies");
+   console.log('Back from function');
+  });
+</script>
+
+{% endblock %}
+
+
+
+
 {% block page_content %}
 
 
@@ -9,9 +41,8 @@
 
 <h2>Companies within the branch</h2>
 
-<div class="embed-responsive embed-responsive-16by9">
-  <iframe class="embed-responsive-item" src="https://query.wikidata.org/embed.html#select%20%2a%20where%20%7B%0A%20%20%3Fcompany%20wdt%3AP452%2Fwdt%3AP279%2a%20wd%3A{{ q }}%20.%0A%20%20optional%20%7B%20%3Fcompany%20rdfs%3Alabel%20%3Fcompany_label%20.%20filter%28lang%28%3Fcompany_label%29%20%3D%20%27da%27%29%20%7D%0A%20%20optional%20%7B%0A%20%20%20%20%3Fcompany%20wdt%3AP17%20%3Fcountry%20.%0A%20%20%20%20%3Fcountry%20rdfs%3Alabel%20%3Fcountry_label%20.%20filter%28lang%28%3Fcountry_label%29%20%3D%20%27da%27%29%20%0A%20%20%7D%0A%7D%0Aorder%20by%20desc%28%3Fcompany_label%29"></iframe>
-</div>
+<table class="table table-hover" id="list-of-companies"></table>
+
 
 
 {% endblock %}
