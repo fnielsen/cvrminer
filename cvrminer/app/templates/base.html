@@ -2,13 +2,28 @@
 
 {% block title %}cvrminer{% endblock %}
 
+{% block head %}
+{{super()}}
+
+<link rel="stylesheet" type="text/css" href="/static/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="/cvrminer/static/jquery.dataTables.min.css">
+
+{% endblock %}
+
+
+
 {% block scripts %}
 {{super()}}
 
-<link rel="stylesheet" type="text/css"
-      href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
-<script type="text/javascript" charset="utf8"
-      src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="/static/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="/cvrminer/static/jquery-3.2.1.min.js"></script>
+
+<script src="/static/jquery.dataTables.min.js"></script>
+<script src="/cvrminer/static/jquery.dataTables.min.js"></script>
+
+<script type="text/javascript" src="/static/cvrminer.js"></script>
+<script type="text/javascript" src="/cvrminer/static/cvrminer.js"></script>
+
 
 <script type="text/javascript" charset="utf8">
 $(document).ready( function () {
