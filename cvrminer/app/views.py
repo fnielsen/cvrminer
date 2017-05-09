@@ -1,6 +1,6 @@
 """Views for cvrminer app."""
 
-from flask import Blueprint, current_app, render_template
+from flask import (Blueprint, current_app, redirect, render_template, url_for)
 
 from werkzeug.routing import BaseConverter
 
@@ -50,6 +50,21 @@ q_pattern = '<regex("Q[1-9]\d*"):q>'
 def index():
     """Return index page of for app."""
     return render_template('index.html')
+
+
+@main.route("/" + q_pattern)
+def redirect_q(q):
+    """Detect and redirect to CVRminer class page.
+
+    Parameters
+    ----------
+    q : str
+        Wikidata item identifier
+
+    """
+    class_ = 'company'
+    method = 'app.show_' + class_
+    return redirect(url_for(method, q=q), code=302)
 
 
 @main.route("/smiley/")
