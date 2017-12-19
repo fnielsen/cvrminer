@@ -5,6 +5,23 @@
 {{super()}}
 
 <script type="text/javascript">
+    listOfPersonsSparql = `
+SELECT ?person ?personLabel
+WITH {
+  SELECT DISTINCT ?person WHERE {
+    wd:{{ q }} wdt:P127* / (wdt:P169 | wdt:P3320 | wdt:P1037 | wdt:P6 | wdt:P488 | wdt:P1075 ) ?person .
+  }
+} AS %result 
+WHERE {
+  INCLUDE %result
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "da,en" .  } 
+}
+ `
+
+ 
+ $(document).ready(function() {
+   sparqlToDataTable(listOfPersonsSparql, "#list-of-persons");
+  });
 </script>
 
 {% endblock %}
@@ -16,17 +33,24 @@
 
 <h1 id="h1">Company</h1>
 
+
+<h2>Persons</h2>
+
+
+<table class="table table-hover" id="list-of-persons"></table>
+
+
+
 <h2>Ownership graph</h2>
 
 <div class="embed-responsive embed-responsive-4by3">
     <iframe class="embed-responsive-item" src="https://query.wikidata.org/embed.html#%23defaultView%3AGraph%0APREFIX%20gas%3A%20%3Chttp%3A%2F%2Fwww.bigdata.com%2Frdf%2Fgas%23%3E%0A%0ASELECT%20%3Ffrom%20%3Ffrom_image%20%3FfromLabel%20%3Fto%20%3Fto_image%20%3FtoLabel%0AWITH%20%7B%0A%20%20SELECT%20DISTINCT%20%3Ffrom%20%3Fto%20WHERE%20%7B%0A%20%20%20%20%7B%20%0A%20%20%20%20%20%20SELECT%20%28%3Fowner%20AS%20%3Ffrom%29%20%28%3Fowned%20AS%20%3Fto%29%20WHERE%20%7B%0A%20%20%20%20%20%20%20%20SERVICE%20gas%3Aservice%20%7B%0A%20%20%20%20%20%20%20%20%20%20gas%3Aprogram%20gas%3AgasClass%20%22com.bigdata.rdf.graph.analytics.BFS%22%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3Ain%20wd%3A{{ q }}%20%3B%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3AtraversalDirection%20%22Forward%22%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3Aout%20%3Fowner%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3AlinkType%20wdt%3AP1830%20%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%3Fowner%20wdt%3AP1830%20%3Fowned%20.%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%0A%20%20%20%20UNION%0A%20%20%20%20%7B%20%0A%20%20%20%20%20%20SELECT%20%28%3Fowner%20AS%20%3Ffrom%29%20%28%3Fowned%20AS%20%3Fto%29%20WHERE%20%7B%0A%20%20%20%20%20%20%20%20SERVICE%20gas%3Aservice%20%7B%0A%20%20%20%20%20%20%20%20%20%20gas%3Aprogram%20gas%3AgasClass%20%22com.bigdata.rdf.graph.analytics.BFS%22%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3Ain%20wd%3A{{ q }}%20%3B%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3AtraversalDirection%20%22Reverse%22%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3Aout%20%3Fowned%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3AlinkType%20wdt%3AP1830%20%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%3Fowner%20wdt%3AP1830%20%3Fowned%20.%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%0A%20%20%20%20UNION%0A%20%20%20%20%7B%20%0A%20%20%20%20%20%20SELECT%20%28%3Fowner%20AS%20%3Ffrom%29%20%28%3Fowned%20AS%20%3Fto%29%20WHERE%20%7B%0A%20%20%20%20%20%20%20%20SERVICE%20gas%3Aservice%20%7B%0A%20%20%20%20%20%20%20%20%20%20gas%3Aprogram%20gas%3AgasClass%20%22com.bigdata.rdf.graph.analytics.BFS%22%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3Ain%20wd%3A{{ q }}%20%3B%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3AtraversalDirection%20%22Forward%22%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3Aout%20%3Fowned%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3AlinkType%20wdt%3AP127%20%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%3Fowned%20wdt%3AP127%20%3Fowner%20.%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%0A%20%20%20%20UNION%0A%20%20%20%20%7B%20%0A%20%20%20%20%20%20SELECT%20%28%3Fowner%20AS%20%3Ffrom%29%20%28%3Fowned%20AS%20%3Fto%29%20WHERE%20%7B%0A%20%20%20%20%20%20%20%20SERVICE%20gas%3Aservice%20%7B%0A%20%20%20%20%20%20%20%20%20%20gas%3Aprogram%20gas%3AgasClass%20%22com.bigdata.rdf.graph.analytics.BFS%22%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3Ain%20wd%3A{{ q }}%20%3B%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3AtraversalDirection%20%22Reverse%22%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3Aout%20%3Fowner%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3AlinkType%20wdt%3AP127%20%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%3Fowned%20wdt%3AP127%20%3Fowner%20.%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%0A%20%20%7D%0A%7D%20AS%20%25result%20%0AWHERE%20%7B%0A%20%20INCLUDE%20%25result%0A%20%20OPTIONAL%20%7B%20%3Ffrom%20wdt%3AP18%20%3Ffrom_image%20.%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fto%20wdt%3AP18%20%3Fto_image%20.%20%7D%0A%20%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22da%2Cen%22%20.%20%20%7D%20%0A%7D%0A"></iframe>
 </div>
 
-<h2>Persons</h2>
+<h2>Control graph based on Wikidata</h2>
 
 <div class="embed-responsive embed-responsive-4by3">
-    <iframe class="embed-responsive-item" src="https://query.wikidata.org/embed.html#SELECT%20%3Fperson%20%3FpersonLabel%0AWITH%20%7B%0A%20%20SELECT%20DISTINCT%20%3Fperson%20WHERE%20%7B%0A%20%20%20%20wd%3A{{ q }}%20wdt%3AP127%2a%20%2F%20%28wdt%3AP169%20%7C%20wdt%3AP3320%20%7C%20wdt%3AP1037%20%7C%20wdt%3AP6%20%7C%20wdt%3AP488%20%7C%20wdt%3AP1075%20%29%20%3Fperson%20.%0A%20%20%7D%0A%7D%20AS%20%25result%20%0AWHERE%20%7B%0A%20%20INCLUDE%20%25result%0A%20%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22da%2Cen%22%20.%20%20%7D%20%0A%7D%0A"
-    </iframe>
+  <iframe class="embed-responsive-item" src="https://query.wikidata.org/embed.html#%23defaultView%3AGraph%0APREFIX%20wd%3A%20%3Chttp%3A%2F%2Fwww.wikidata.org%2Fentity%2F%3E%0APREFIX%20wdt%3A%20%3Chttp%3A%2F%2Fwww.wikidata.org%2Fprop%2Fdirect%2F%3E%0APREFIX%20gas%3A%20%3Chttp%3A%2F%2Fwww.bigdata.com%2Frdf%2Fgas%23%3E%0A%0ASELECT%20%3Ffrom%20%3Ffrom_image%20%3FfromLabel%20%3Fto%20%3Fto_image%20%3FtoLabel%20WHERE%20%7B%0A%20%20%7B%20%0A%20%20%20%20SELECT%20%28%3Fowner%20AS%20%3Ffrom%29%20%28%3Fowned%20AS%20%3Fto%29%20WHERE%20%7B%0A%20%20%20%20%20%20%7B%20%0A%20%20%20%20%20%20%20%20SELECT%20%3Fowner1%20%3Fowned1%20WHERE%20%7B%0A%20%20%20%20%20%20%20%20%20%20SERVICE%20gas%3Aservice%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20gas%3Aprogram%20gas%3AgasClass%20%22com.bigdata.rdf.graph.analytics.BFS%22%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3Ain%20wd%3A{{ q }}%20%3B%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3AtraversalDirection%20%22Undirected%22%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3Aout%20%3Fowned1%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3Aout1%20%3Fdepth%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3Aout2%20%3Fowner1%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3AlinkType%20wdt%3AP1830%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3AmaxIterations%205%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3AmaxVisited%20200%20.%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%3Fowner%20wdt%3AP1830%20%3Fowned%20.%0A%20%20%20%20%20%20FILTER%20%28%3Fowner%20%3D%20%3Fowner1%20%20%7C%7C%20%3Fowner%20%3D%20%3Fowned1%20%7C%7C%20%3Fowned%20%3D%20%3Fowner1%20%7C%7C%20%3Fowned%20%3D%20%3Fowned1%29%20%20%0A%20%20%20%20%7D%0A%20%20%7D%20%20%0A%20%20UNION%20%0A%20%20%7B%20%20%0A%20%20%20%20SELECT%20%28%3Fcontroller%20AS%20%3Ffrom%29%20%28%3Fcompany%20AS%20%3Fto%29%20WHERE%20%7B%0A%20%20%20%20%20%20%7B%20%0A%20%20%20%20%20%20%20%20SELECT%20%3Fowner1%20%3Fowned1%20WHERE%20%7B%0A%20%20%20%20%20%20%20%20%20%20SERVICE%20gas%3Aservice%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20gas%3Aprogram%20gas%3AgasClass%20%22com.bigdata.rdf.graph.analytics.BFS%22%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3Ain%20wd%3A{{ q }}%20%3B%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3AtraversalDirection%20%22Undirected%22%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3Aout%20%3Fowned1%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3Aout1%20%3Fdepth%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3Aout2%20%3Fowner1%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3AlinkType%20wdt%3AP1830%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3AmaxIterations%205%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20gas%3AmaxVisited%20200%20.%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%3Fcompany%20wdt%3AP127%20%7C%20wdt%3AP169%20%7C%20wdt%3AP488%20%7C%20wdt%3AP1037%20%7C%20wdt%3AP3320%20%3Fcontroller%20.%0A%20%20%20%20%20%20FILTER%20%28%3Fcompany%20%3D%20%3Fowner1%20%7C%7C%20%3Fcompany%20%3D%20%3Fowned1%29%0A%20%20%20%20%7D%0A%20%20%7D%0A%20%20OPTIONAL%20%7B%20%3Ffrom%20wdt%3AP18%20%3Ffrom_image%20.%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fto%20wdt%3AP18%20%3Fto_image%20.%20%7D%0A%20%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22da%2Cen%22%20.%20%20%7D%20%0A%7D%20"></iframe>
 </div>
 
 
