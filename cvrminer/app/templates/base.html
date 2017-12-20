@@ -36,10 +36,11 @@ $(document).ready( function () {
 {% block navbar %}
 <div class="navbar navbar-static-top">
   <ul class="nav nav-pills">
-    <li role="presentation" class="active"><a href="/">cvrminer</a></li>
-    <li role="presentation"><a href="company/">Company</a></li>
-    <li role="presentation"><a href="branch/">Branch</a></li>
-    <li role="presentation"><a href="exchange/">Exchange</a></li>
+    <li role="presentation"><a href="/">cvrminer</a></li>
+    <li role="presentation"><a href="{{ url_for('app.show_person_empty') }}">Person</a></li>
+    <li role="presentation"><a href="{{ url_for('app.show_company_empty') }}">Company</a></li>
+    <li role="presentation"><a href="{{ url_for('app.show_branch_empty') }}">Branch</a></li>
+    <li role="presentation"><a href="{{ url_for('app.show_exchange_empty') }}">Exchange</a></li>
   </ul>
 </div>
 {% endblock %}
