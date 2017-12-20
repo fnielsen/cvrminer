@@ -177,3 +177,36 @@ def show_exchange(q):
 
     """
     return render_template('exchange.html', q=q)
+
+
+@main.route('/person/')
+def show_person_empty():
+    """Return rendered index page for person.
+
+    Returns
+    -------
+    html : str
+        Rendered HTML page for branch index page.
+
+    """
+    return render_template('person_empty.html')
+
+
+@main.route('/person/' + q_pattern)
+def show_person(q):
+    """Return HTML rendering for specific person.
+
+    Parameters
+    ----------
+    q : str
+        Wikidata item identifier.
+
+    Returns
+    -------
+    html : str
+        Rendered HTML.
+
+    """
+    return render_template('person.html', q=q)
+
+
