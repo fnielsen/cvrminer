@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+
+{% block scripts %}
+{{super()}}
+
+<script type="text/javascript">
+    listOfCompaniesSparql = `
+SELECT DISTINCT ?start ?end ?company ?companyLabel 
+WITH {
+  SELECT ?company ?start ?end WHERE {
+    wd:{{ q }} p:P108 ?company_statement .
+    ?company_statement ps:P108 ?company .
+    OPTIONAL { ?company_statement pq:P580 ?start }
+    OPTIONAL { ?company_statement pq:P582 ?end }
+  }
+} AS %companies_via_person
+WITH {
+  SELECT ?company ?start ?end WHERE {
+    ?company p:P1037 | p:P3320 | p:P488 ?person_statement .
+    ?person_statement ps:P1037 | ps:P3320 | ps:P488 wd:Q21002708 .
+    OPTIONAL { ?person_statement pq:P580 ?start }
+    OPTIONAL { ?person_statement pq:P582 ?end }
+  }
+} AS %companies_via_company
+WHERE {
+  { INCLUDE %companies_via_person }
+  UNION
+  { INCLUDE %companies_via_company }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],da,en". }
+}
+  `
+
+ 
+ $(document).ready(function() {
+   sparqlToDataTable(listOfCompaniesSparql, "#list-of-companies");
+  });
+</script>
+
+{% endblock %}
+
+
+
+{% block page_content %}
+
+
+<h1 id="h1">Person</h1>
+
+
+<h2>Companies</h2>
+
+
+<table class="table table-hover" id="list-of-companies"></table>
+
+
+{% endblock %}
