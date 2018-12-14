@@ -4,6 +4,7 @@ Usage:
   cvrminer.smiley all-cvrs [options]
   cvrminer.smiley build-sqlite-database [options]
   cvrminer.smiley query [options] [<query>]
+  cvrminer.smiley url-to-smiley-id [options] <url>
 
 Options:
   -h --help           Help message.
@@ -32,9 +33,13 @@ import os
 from os import write
 from os.path import join, split
 
+import re
+
 import signal
 
 import sys
+
+from lxml import html
 
 import sqlite3
 
@@ -50,6 +55,8 @@ from .config import data_directory
 
 from .utils import make_data_directory
 
+
+HEADERS = {'user-agent': 'cvrminer'}
 
 SMILEY_CSV_FILENAME = 'SmileyStatus.csv'
 
@@ -218,6 +225,30 @@ class Smiley(object):
         return self.db.query(query)
 
 
+def url_to_smiley_id(url):
+    """From URL attempt to extract smiley id.
+
+    Parameters
+    ----------
+    url : str
+        URL to webpage where a smiley link should be present.
+
+    Returns
+    -------
+    smiley_id : str or None
+         String with smiley identifier if found, otherwise returns None.
+
+    """
+    response = requests.get(url, headers=HEADERS)
+    tree = html.fromstring(response.content)
+    links = tree.xpath('//a/@href')
+    for link in links:
+        smiley_id = re.findall("https?://www.findsmiley.dk/.*?(\d+)$", link)
+        if len(smiley_id) > 0:
+            return smiley_id[0]
+    return None
+
+
 def main():
     """Handle command-line interface."""
     from docopt import docopt
@@ -248,19 +279,29 @@ def main():
     # Ignore broken pipe errors
     signal.signal(signal.SIGPIPE, signal.SIG_DFL)
 
-    smiley = Smiley(logging_level=logging_level)
-
     if arguments['all-cvrs']:
+        smiley = Smiley(logging_level=logging_level)
+
         for cvr in sorted(smiley.all_cvrs()):
             print(cvr)
 
     elif arguments['build-sqlite-database']:
+        smiley = Smiley(logging_level=logging_level)
+
         smiley.build_sqlite_database()
 
     elif arguments['query']:
+        smiley = Smiley(logging_level=logging_level)
+
         query = arguments['<query>']
         df = smiley.where(query)
         write(output_file, df.to_csv(index=False, encoding=output_encoding))
+
+    elif arguments['url-to-smiley-id']:
+        url = arguments['<url>']
+        smiley_id = url_to_smiley_id(url)
+        if smiley_id:
+            write(output_file, smiley_id + "\n")
 
     else:
         assert False
