@@ -45,6 +45,7 @@ CONFIG_FILENAMES = [
 
 class GoogleError(Exception):
     """Exception for Google API."""
+
     pass
 
 
@@ -72,6 +73,33 @@ class GooglePlaceArchive(object):
         self.file.write(json.dumps(data) + '\n')
         self.last_line += 1
         self.place_id_index[place_id] = self.last_line
+
+    def data(self):
+        """Iterate over data.
+
+        Yields
+        ------
+        data : dict
+            Data as a nested dict.
+
+        """
+        for line in self.file:
+            data = json.loads(line)
+            yield data
+
+    def data_by_name(self, name):
+        """Iterate over data.
+
+        Yields
+        ------
+        data : dict
+            Data as a nested dict.
+
+        """
+        for line in self.file:
+            data = json.loads(line)
+            if data.get('result', {}).get('name', None) == name:
+                yield data
 
     def has_place_id(self, place_id):
         """Test if place identifier is downloaded."""
