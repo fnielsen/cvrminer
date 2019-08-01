@@ -1,7 +1,8 @@
 CVR miner
 =========
 
-Data mining of [CVR](https://www.wikidata.org/wiki/Q795419)
+Data mining of `CVR
+<https://www.wikidata.org/wiki/Q795419>`_
 
 Examples
 --------
