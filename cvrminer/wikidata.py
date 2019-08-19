@@ -14,6 +14,9 @@ from __future__ import absolute_import, division, print_function
 import requests
 
 
+HEADERS = {'user-agent': 'cvrminer'}
+
+
 def cvr_to_q(cvr):
     """Convert CVR to Wikidata ID.
 
@@ -41,8 +44,11 @@ def cvr_to_q(cvr):
 
     url = 'https://query.wikidata.org/sparql'
     params = {'query': query, 'format': 'json'}
-    response = requests.get(url, params=params)
-    data = response.json()
+    response = requests.get(url, params=params, headers=HEADERS)
+    try:
+        data = response.json()
+    except:
+        return None
 
     qs = [item['company']['value'][31:]
           for item in data['results']['bindings']]
