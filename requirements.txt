@@ -7,7 +7,7 @@ lxml
 numpy>=1.22.2
 pymongo
 requests>=2.32.2
-urllib3>=1.26.19
+urllib3>=2.2.2
 werkzeug>=2.3.8
 xlrd
 zipp>=3.19.1
