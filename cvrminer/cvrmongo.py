@@ -44,7 +44,7 @@ class CvrMongo(object):
     """Mongo database interface for CVR data."""
 
     def __init__(self):
-        """Setup variables."""
+        """Set up variables."""
         self.client = MongoClient()
         self.db = self.client.cvrminer
         self.db.companies.create_index('cvrNummer', unique=True)

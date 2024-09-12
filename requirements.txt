@@ -1,9 +1,15 @@
 db.py
+dnspython>=2.6.1
 docopt
 flask
 Flask-Bootstrap
 lxml
-numpy
+numpy>=1.22.2
 pymongo
-requests
+requests>=2.32.2
+urllib3>=1.26.19
+werkzeug>=2.3.8
 xlrd
+zipp>=3.19.1
+
+

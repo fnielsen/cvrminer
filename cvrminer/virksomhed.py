@@ -33,7 +33,7 @@ class Virksomhed(object):
     """
 
     def __init__(self, data):
-        """Initial raw data storage.
+        """Initialize raw data storage.
 
         Parameters
         ----------
@@ -141,9 +141,9 @@ class Virksomhed(object):
         try:
             value = self.data['virksomhedMetadata'][
                 'nyesteAarsbeskaeftigelse']['intervalKodeAntalAnsatte']
-            numbers = findall('\d+', value)
+            numbers = findall(r'\d+', value)
             return int(numbers[0])
-        except:
+        except Exception:
             return nan
 
     @property
@@ -172,7 +172,7 @@ class Virksomhed(object):
             value = self.data['virksomhedMetadata'][
                 'nyesteVirksomhedsform']['langBeskrivelse']
             return value
-        except:
+        except Exception:
             return nan
 
     @property
@@ -189,7 +189,7 @@ class Virksomhed(object):
             statuskode = self.data[
                 'virksomhedMetadata']['nyesteStatus']['statuskode']
             return str(statuskode)
-        except:
+        except Exception:
             return 'None'
 
     @property
@@ -248,7 +248,7 @@ class Virksomhed(object):
         date = self.stiftelsesdato
         try:
             year = int(date[:4])
-        except:
+        except Exception:
             year = nan
         return year
 
@@ -266,7 +266,7 @@ class Virksomhed(object):
             branchekode = self.data[
                 'virksomhedMetadata']['nyesteHovedbranche']['branchekode']
             return branchekode
-        except:
+        except Exception:
             return None
 
     @property
@@ -282,7 +282,7 @@ class Virksomhed(object):
             branchetekst = self.data[
                 'virksomhedMetadata']['nyesteHovedbranche']['branchetekst']
             return branchetekst
-        except:
+        except Exception:
             return None
 
     def count_fields(self):

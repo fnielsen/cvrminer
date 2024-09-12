@@ -24,7 +24,7 @@ def create_app(smiley=False):
     # Serve assets from wmflabs for privacy reasons
     app.extensions['bootstrap']['cdns']['jquery'] = StaticCDN()
     app.extensions['bootstrap']['cdns']['bootstrap'] = StaticCDN()
-    
+
     if smiley:
         from ..smiley import Smiley
 
