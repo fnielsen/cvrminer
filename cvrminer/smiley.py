@@ -153,7 +153,7 @@ class Smiley(object):
             self._db = DB(filename=full_filename, dbtype='sqlite')
             if not hasattr(self._db.tables, 'smiley'):
                 raise
-        except:
+        except Exception:
             self.build_sqlite_database()
             self._db = DB(filename=full_filename, dbtype='sqlite')
         return self._db
@@ -183,7 +183,7 @@ class Smiley(object):
 
         try:
             df = self.read_zipped_xls_file()
-        except:
+        except Exception:
             df = self.read_csv_file(filename=csv_filename)
 
         table = 'smiley'
@@ -243,7 +243,7 @@ def url_to_smiley_id(url):
     tree = html.fromstring(response.content)
     links = tree.xpath('//a/@href')
     for link in links:
-        smiley_id = re.findall("https?://www.findsmiley.dk/.*?(\d+)$", link)
+        smiley_id = re.findall(r"https?://www.findsmiley.dk/.*?(\d+)$", link)
         if len(smiley_id) > 0:
             return smiley_id[0]
     return None

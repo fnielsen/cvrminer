@@ -49,19 +49,10 @@ JSONL_FILENAME = join(expanduser('~'), 'cvrminer_data',
 
 
 class CvrFile(object):
-    """CVR file.
-
-    Examples
-    --------
-    >>> for item in CvrFile():
-    ...     print(str(item['_type']))
-    ...     break
-    virksomhed
-
-    """
+    """CVR file."""
 
     def __init__(self, filename=JSONL_FILENAME):
-        """Setup file for reading.
+        """Set up file for reading.
 
         Parameters
         ----------
@@ -159,8 +150,7 @@ class CvrFile(object):
                 if not header:
                     header = features.keys()
                     csv_writer.writerow(header)
-                values = [unicode(value).encode('utf-8')
-                          for value in features.values()]
+                values = features.values()
                 csv_writer.writerow(values)
 
 

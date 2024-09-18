@@ -33,7 +33,7 @@ class CvrMongoFeatures(object):
     """Feature extractor based on data in Mongo database."""
 
     def __init__(self):
-        """Setup database."""
+        """Set up database."""
         self.logger = logging.getLogger(__name__ + '.CvrMongoFeatures')
         self.logger.addHandler(logging.NullHandler())
 

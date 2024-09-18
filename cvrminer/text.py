@@ -33,18 +33,18 @@ class PurposeProcessor(object):
     """Text processor for company purpose."""
 
     def __init__(self):
-        """Setup pattern and logger."""
+        """Set up pattern and logger."""
         self.logger = logging.getLogger(__name__ + '.PurposeProcessor')
         self.logger.addHandler(logging.NullHandler())
 
         self.ignore_pattern = re.compile(
-            u"""
+            r"""
             Selskabets\sform\xe5l\ser\sat\sdrive|
             Selskabets\sform\xe5l\ser|
             og\sdermed\sbesl\xe6gtet\svirksomhed|
             \.$
             """,
-            flags=re.UNICODE | re.VERBOSE)
+            flags=re.VERBOSE)
 
         self.stop_words = self.read_stop_words()
         stop_words = sorted(self.stop_words, key=len, reverse=True)

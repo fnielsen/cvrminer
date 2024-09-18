@@ -47,7 +47,7 @@ def cvr_to_q(cvr):
     response = requests.get(url, params=params, headers=HEADERS)
     try:
         data = response.json()
-    except:
+    except Exception:
         return None
 
     qs = [item['company']['value'][31:]

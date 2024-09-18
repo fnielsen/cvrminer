@@ -18,7 +18,7 @@ class RegexConverter(BaseConverter):
     """
 
     def __init__(self, url_map, *items):
-        """Setup regular expression matcher."""
+        """Set up regular expression matcher."""
         super(RegexConverter, self).__init__(url_map)
         self.regex = items[0]
 
@@ -43,7 +43,7 @@ main.add_app_url_map_converter(RegexConverter, 'regex')
 
 
 # Wikidata item identifier matcher
-q_pattern = '<regex("Q[1-9]\d*"):q>'
+q_pattern = r'<regex("Q[1-9]\d*"):q>'
 
 
 @main.route("/")
@@ -208,5 +208,3 @@ def show_person(q):
 
     """
     return render_template('person.html', q=q)
-
-

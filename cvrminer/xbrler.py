@@ -385,7 +385,7 @@ class Regnskabsdata1000(object):
     """
 
     def __init__(self, logging_level=logging.WARN):
-        """Setup logger."""
+        """Set up logger."""
         self.logger = logging.getLogger(__name__)
         self.logger.addHandler(logging.NullHandler())
         self.logger.setLevel(logging_level)
@@ -490,7 +490,7 @@ class Regnskabsdata1000(object):
         for f, filename in self.iter_files(return_filenames=True):
             try:
                 tags = extract_tags(f)
-            except:
+            except Exception:
                 self.logger.error('Could not parse {}'.format(filename))
                 tags = []
             matrix[filename] = defaultdict(int)
@@ -513,7 +513,7 @@ def main():
     elif arguments['print-tag-value']:
 
         filenames = arguments['<filename>']
-        if type(filenames) == str:
+        if isinstance(filenames, str):
             filenames = [filenames]
 
         for filename in filenames:
@@ -526,7 +526,7 @@ def main():
     elif arguments['print-tag-values']:
 
         filenames = arguments['<filename>']
-        if type(filenames) == str:
+        if isinstance(filenames, str):
             filenames = [filenames]
 
         for filename in filenames:
@@ -539,7 +539,7 @@ def main():
     elif arguments['print-tags']:
 
         filenames = arguments['<filename>']
-        if type(filenames) == str:
+        if isinstance(filenames, str):
             filenames = [filenames]
 
         for filename in filenames:
